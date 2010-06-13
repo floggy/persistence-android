@@ -1,21 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.floggy.persistence.android</groupId>
+	<parent>
+		<groupId>org.floggy.persistence.android</groupId>
+		<artifactId>floggy-persistence-android</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
     <artifactId>floggy-persistence-android-sample</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>apk</packaging>
     <name>Floggy Persistence Android Sample</name>
-
     <dependencies>
         <dependency>
             <groupId>android</groupId>
             <artifactId>android</artifactId>
-            <version>2.1_r2</version>
+            <version>${android.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+			<groupId>org.floggy.persistence.android</groupId>
+			<artifactId>floggy-persistence-android-core</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -29,13 +36,6 @@
                     <deleteConflictingFiles>true</deleteConflictingFiles>
                 </configuration>
                 <extensions>true</extensions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
-                </configuration>
             </plugin>
         </plugins>
     </build>
