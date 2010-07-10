@@ -107,47 +107,7 @@
 			</roles>
 			<timezone>-3</timezone>
 		</developer>
-		<developer>
-			<name>Thiago Rossato</name>
-			<id>thiagorossato</id>
-			<email>thiago.rossato@@floggy.org</email>
-			<organization>Floggy Open Source Group</organization>
-			<roles>
-				<role>Java Developer</role>
-			</roles>
-			<timezone>-3</timezone>
-		</developer>
-		<developer>
-			<name>Priscila Tavares Lugon</name>
-			<id>priscilalugon</id>
-			<email>priscila.lugon@@floggy.org</email>
-			<organization>Floggy Open Source Group</organization>
-			<roles>
-				<role>Java Developer</role>
-			</roles>
-			<timezone>-3</timezone>
-		</developer>
-		<developer>
-			<name>Dan Murphy</name>
-			<id>dgem</id>
-			<email>dan.murphy@@floggy.org</email>
-			<organization>Floggy Open Source Group</organization>
-			<roles>
-				<role>Eclipse Developer</role>
-			</roles>
-			<timezone>+0</timezone>
-		</developer>
 	</developers>
-	<contributors>
-		<contributor>
-			<name>Frederico</name>
-			<email>fre_d79@hotmail.com</email>
-			<roles>
-				<role>Java Developer</role>
-			</roles>
-			<timezone>-3</timezone>
-		</contributor>
-	</contributors>
 	<build>
 		<plugins>
 			<plugin>
@@ -311,6 +271,6 @@
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<android.version>2.1_r2</android.version>
+		<android.version>2.1_r1</android.version>
 	</properties>
 </project>

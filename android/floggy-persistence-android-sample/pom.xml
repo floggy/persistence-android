@@ -7,12 +7,11 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
     <artifactId>floggy-persistence-android-sample</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <packaging>apk</packaging>
     <name>Floggy Persistence Android Sample</name>
     <dependencies>
         <dependency>
-            <groupId>android</groupId>
+            <groupId>com.google.android</groupId>
             <artifactId>android</artifactId>
             <version>${android.version}</version>
             <scope>provided</scope>
