@@ -1,6 +1,6 @@
 package org.floggy.persistence.android;
 
-public enum Startegy {
+public enum Strategy {
 	
 	PerClass,
 	Single,
