@@ -76,6 +76,7 @@
 	<modules>
 		<module>floggy-persistence-android-core</module>
 		<module>floggy-persistence-android-sample</module>
+		<module>floggy-persistence-android-test</module>
 	</modules>
 	<properties>
 		<android.version>2.1_r1</android.version>
