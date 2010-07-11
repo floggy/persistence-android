@@ -18,78 +18,42 @@ package org.floggy.persistence.android.sample;
 import org.floggy.persistence.android.PersistableManager;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TableLayout;
+import android.widget.EditText;
 
-/**
-* HelloFloggy is a sample application for the usage of the Maven Android
-* Plugin. The code is trivial and not the focus of this example and therefore
-* not really documented.
- */
 public class HelloFloggy extends Activity {
-	Button blackButton;
-	Button blueButton;
-	Button greenButton;
-	Button redButton;
-	Button whiteButton;
-	TableLayout table;
+
+	protected EditText nameEditText;
+	protected EditText ageEditText;
+	protected Button submitButton;
 
 	/**
-	* DOCUMENT ME!
-	*
-	* @param savedInstanceState DOCUMENT ME!
-	*/
+	 * DOCUMENT ME!
+	 * 
+	 * @param savedInstanceState
+	 *            DOCUMENT ME!
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		table = (TableLayout) findViewById(R.id.Table);
-		table.setBackgroundColor(Color.WHITE);
-		redButton = (Button) findViewById(R.id.ButtonRed);
-		greenButton = (Button) findViewById(R.id.ButtonGreen);
-		blueButton = (Button) findViewById(R.id.ButtonBlue);
-		blackButton = (Button) findViewById(R.id.ButtonBlack);
-		whiteButton = (Button) findViewById(R.id.ButtonWhite);
+		nameEditText = (EditText) findViewById(R.id.NameEditText);
+		ageEditText = (EditText) findViewById(R.id.AgeEditText);
+		submitButton = (Button) findViewById(R.id.SubmitButton);
 
-		redButton.setOnClickListener(new Button.OnClickListener() {
-				public void onClick(View v) {
-					table.setBackgroundColor(Color.RED);
+		submitButton.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+				Person person = new Person();
+				try {
+					PersistableManager.getInstance().save(person);
+				} catch (Exception e) {
+					Log.e(ACTIVITY_SERVICE, e.getMessage(), e);
 				}
-			});
-
-		greenButton.setOnClickListener(new Button.OnClickListener() {
-				public void onClick(View v) {
-					table.setBackgroundColor(Color.GREEN);
-				}
-			});
-
-		blueButton.setOnClickListener(new Button.OnClickListener() {
-				public void onClick(View v) {
-					table.setBackgroundColor(Color.BLUE);
-				}
-			});
-
-		blackButton.setOnClickListener(new Button.OnClickListener() {
-				public void onClick(View v) {
-					table.setBackgroundColor(Color.BLACK);
-				}
-			});
-
-		whiteButton.setOnClickListener(new Button.OnClickListener() {
-				public void onClick(View v) {
-					Person person = new Person();
-					try {
-						PersistableManager.getInstance().save(person);
-					} catch (Exception e) {
-						Log.e(ACTIVITY_SERVICE, e.getMessage(), e);
-					}
-					table.setBackgroundColor(Color.WHITE);
-				}
-			});
+			}
+		});
 	}
 }

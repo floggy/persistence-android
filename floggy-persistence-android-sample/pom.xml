@@ -50,6 +50,11 @@
 					<sdk>
 						<platform>7</platform>
 					</sdk>
+					<emulator>
+						<avd>FloggyPort</avd>
+						<wait>10000</wait>
+						<options>-no-skin</options>
+					</emulator>
 					<deleteConflictingFiles>true</deleteConflictingFiles>
 				</configuration>
 				<extensions>true</extensions>
