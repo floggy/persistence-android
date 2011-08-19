@@ -13,30 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.floggy.persistence.android.sample;
 
 import org.floggy.persistence.android.Persistable;
 
 /**
- * DOCUMENT ME!
- *
- * @author <a href="mailto:thiago.moreira@floggy.org">Thiago Moreira</a>
- * @version $Revision$
-  */
+* DOCUMENT ME!
+*
+* @author <a href="mailto:thiago.moreira@floggy.org">Thiago Moreira</a>
+* @version $Revision$
+ */
 public class Person implements Persistable {
-	/**
-	 * DOCUMENT ME!
-	 */
+	/** DOCUMENT ME! */
 	protected String name;
 
-	/**
-	 * DOCUMENT ME!
-	 */
+	/** DOCUMENT ME! */
 	protected int age;
 
 	/**
-	 * DOCUMENT ME!
+	* DOCUMENT ME!
 	*
 	* @return DOCUMENT ME!
 	*/
@@ -45,7 +40,7 @@ public class Person implements Persistable {
 	}
 
 	/**
-	 * DOCUMENT ME!
+	* DOCUMENT ME!
 	*
 	* @return DOCUMENT ME!
 	*/
@@ -54,7 +49,7 @@ public class Person implements Persistable {
 	}
 
 	/**
-	 * DOCUMENT ME!
+	* DOCUMENT ME!
 	*
 	* @param age DOCUMENT ME!
 	*/
@@ -63,11 +58,21 @@ public class Person implements Persistable {
 	}
 
 	/**
-	 * DOCUMENT ME!
+	* DOCUMENT ME!
 	*
 	* @param name DOCUMENT ME!
 	*/
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	/**
+	 * DOCUMENT ME!
+	*
+	* @return DOCUMENT ME!
+	*/
+	@Override
+	public String toString() {
+		return "Person [name=" + name + ", age=" + age + "]";
 	}
 }

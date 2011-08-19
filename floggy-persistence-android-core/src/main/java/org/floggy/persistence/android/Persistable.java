@@ -16,13 +16,10 @@
 package org.floggy.persistence.android;
 
 /**
- * A class that implements or extends this <code>interface</code> is
- * considered persistable.<br>
- * <br>
- * By default, all fields of a persistable class will be persisted except those
- * declared as <code>transient</code> or <code>static</code>.<br>
- * 
- * @since 1.0
- */
+ * DOCUMENT ME!
+ *
+ * @author <a href="mailto:thiago.moreira@floggy.org">Thiago Moreira</a>
+ * @version $Revision$
+  */
 public interface Persistable {
 }

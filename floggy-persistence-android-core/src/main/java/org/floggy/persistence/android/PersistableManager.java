@@ -15,12 +15,15 @@
  */
 package org.floggy.persistence.android;
 
+import org.floggy.persistence.android.core.impl.PersistableManagerAndroid;
+
+import android.content.Context;
+
 /**
 * This is the main class of the framework. All persistence operations
 * methods (such as loading, saving, deleting and searching for objects) are
 * declared in this class.
 *
-* @since 1.0
  */
 public abstract class PersistableManager {
 	public static final String BATCH_MODE = "BATCH_MODE";
@@ -31,13 +34,13 @@ public abstract class PersistableManager {
 	/**
 	* Returns the current instance of PersistableManager.
 	*
-	* @return The current instance of PersistableManager.
+	* @param context DOCUMENT ME!
 	*
-	* @throws RuntimeException DOCUMENT ME!
+	* @return The current instance of PersistableManager.
 	*/
-	public static PersistableManager getInstance() {
+	public static PersistableManager getInstance(Context context) {
 		if (instance == null) {
-			instance = new PersistableManagerAndroid();
+			instance = new PersistableManagerAndroid(context);
 		}
 
 		return instance;
@@ -156,7 +159,7 @@ public abstract class PersistableManager {
 	*
 	* @see #save(Persistable)
 	*/
-	public abstract void load(Persistable persistable, int id)
+	public abstract void load(Persistable persistable, long id)
 		throws FloggyException;
 
 	/**
@@ -174,7 +177,7 @@ public abstract class PersistableManager {
 	*
 	* @see #save(Persistable)
 	*/
-	public abstract void load(Persistable persistable, int id, boolean lazy)
+	public abstract void load(Persistable persistable, long id, boolean lazy)
 		throws FloggyException;
 
 	/**
@@ -192,7 +195,7 @@ public abstract class PersistableManager {
 	*
 	* @see #load(Persistable, int)
 	*/
-	public abstract int save(Persistable persistable) throws FloggyException;
+	public abstract long save(Persistable persistable) throws FloggyException;
 
 	/**
 	* Set a property

@@ -15,27 +15,52 @@
  */
 package org.floggy.persistence.android.sample;
 
+import org.floggy.persistence.android.ObjectSet;
 import org.floggy.persistence.android.PersistableManager;
 
 import android.app.Activity;
+
 import android.os.Bundle;
+
 import android.util.Log;
+
 import android.view.View;
+
 import android.widget.Button;
 import android.widget.EditText;
 
+/**
+ * DOCUMENT ME!
+ *
+ * @author <a href="mailto:thiago.moreira@floggy.org">Thiago Moreira</a>
+ * @version $Revision$
+  */
 public class HelloFloggy extends Activity {
-
-	protected EditText nameEditText;
-	protected EditText ageEditText;
+	/**
+	 * DOCUMENT ME!
+	 */
 	protected Button submitButton;
 
 	/**
 	 * DOCUMENT ME!
-	 * 
-	 * @param savedInstanceState
-	 *            DOCUMENT ME!
 	 */
+	protected EditText ageEditText;
+
+	/**
+	 * DOCUMENT ME!
+	 */
+	protected EditText nameEditText;
+
+	/**
+	 * DOCUMENT ME!
+	 */
+	protected PersistableManager manager;
+
+	/**
+	* DOCUMENT ME!
+	*
+	* @param savedInstanceState DOCUMENT ME!
+	*/
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -46,14 +71,52 @@ public class HelloFloggy extends Activity {
 		submitButton = (Button) findViewById(R.id.SubmitButton);
 
 		submitButton.setOnClickListener(new Button.OnClickListener() {
-			public void onClick(View v) {
-				Person person = new Person();
-				try {
-					PersistableManager.getInstance().save(person);
-				} catch (Exception e) {
-					Log.e(ACTIVITY_SERVICE, e.getMessage(), e);
-				}
-			}
-		});
+				public void onClick(View v) {
+					Person person = new Person();
+					person.setName(nameEditText.getEditableText().toString());
+					person.setAge(Integer.parseInt(ageEditText.getEditableText().toString()));
+
+					try {
+						long id = manager.save(person);
+						Log.v(ACTIVITY_SERVICE, String.valueOf(id));
+
+						person = new Person();
+
+						manager.load(person, id, false);
+
+						Log.v(ACTIVITY_SERVICE, String.valueOf(person));
+						
+						manager.save(new Agent());
+					} catch (Exception e) {
+						Log.e(ACTIVITY_SERVICE, e.getMessage(), e);
+					}
+					
+					
+
+					try {
+						ObjectSet os = manager.find(Person.class, null, null);
+						int size = os.size();
+
+						for (int i = 0; i < size; i++) {
+							Log.v(ACTIVITY_SERVICE, String.valueOf(os.get(i)));
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					System.out.println();
+					try {
+						ObjectSet os = manager.find(Agent.class, null, null);
+						int size = os.size();
+
+						for (int i = 0; i < size; i++) {
+							Log.v(ACTIVITY_SERVICE, String.valueOf(os.get(i)));
+						}
+					} catch (Exception e) {
+						Log.e(ACTIVITY_SERVICE, e.getMessage(), e);
+					}
+}
+			});
+
+		manager = PersistableManager.getInstance(this);
 	}
 }

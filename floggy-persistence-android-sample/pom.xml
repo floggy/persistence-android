@@ -68,6 +68,7 @@
 						<options>-no-skin</options>
 					</emulator>
 					<deleteConflictingFiles>true</deleteConflictingFiles>
+					<undeployBeforeDeploy>true</undeployBeforeDeploy>
 				</configuration>
 				<extensions>true</extensions>
 			</plugin>
