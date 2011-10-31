@@ -30,7 +30,8 @@ import org.floggy.persistence.android.test.animal.Bird;
  * @author <a href="mailto:thiago.moreira@floggy.org">Thiago Moreira</a>
  * @version $Revision$
   */
-public class FloggyPerson implements Persistable, Deletable {
+@Persistable
+public class FloggyPerson implements Deletable {
 	public char sex;
 
 	/**

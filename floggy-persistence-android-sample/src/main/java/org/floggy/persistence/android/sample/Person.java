@@ -23,7 +23,8 @@ import org.floggy.persistence.android.Persistable;
 * @author <a href="mailto:thiago.moreira@floggy.org">Thiago Moreira</a>
 * @version $Revision$
  */
-public class Person implements Persistable {
+@Persistable(table="Person")
+public class Person {
 	/** DOCUMENT ME! */
 	protected String name;
 

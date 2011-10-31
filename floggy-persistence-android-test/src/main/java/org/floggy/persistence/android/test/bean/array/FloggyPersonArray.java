@@ -29,7 +29,8 @@ import org.floggy.persistence.android.test.animal.Bird;
  * @author <a href="mailto:thiago.moreira@floggy.org">Thiago Moreira</a>
  * @version $Revision$
   */
-public class FloggyPersonArray implements Persistable, Deletable {
+@Persistable
+public class FloggyPersonArray implements Deletable {
 	/**
 	 * DOCUMENT ME!
 	 */

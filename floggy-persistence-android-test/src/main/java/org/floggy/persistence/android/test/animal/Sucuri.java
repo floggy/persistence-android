@@ -15,7 +15,6 @@
  */
 package org.floggy.persistence.android.test.animal;
 
-import org.floggy.persistence.android.Persistable;
 
 /**
  * DOCUMENT ME!
@@ -23,5 +22,5 @@ import org.floggy.persistence.android.Persistable;
  * @author <a href="mailto:thiago.moreira@floggy.org">Thiago Moreira</a>
  * @version $Revision$
   */
-public class Sucuri extends Snake implements Persistable {
+public class Sucuri extends Snake {
 }

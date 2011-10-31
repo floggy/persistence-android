@@ -16,8 +16,6 @@
 
 package org.floggy.persistence.android.core.impl;
 
-import org.floggy.persistence.android.Persistable;
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -30,14 +28,14 @@ import android.database.sqlite.SQLiteOpenHelper;
   */
 public class PersonDatabaseHelper extends SQLiteOpenHelper {
 	
-	protected Class<? extends Persistable> persistableClass;
+	protected Class persistableClass;
 	/**
 	 * Creates a new PersonDatabaseHelper object.
 	 *
 	 * @param context DOCUMENT ME!
 	 */
-	public PersonDatabaseHelper(Class<? extends Persistable> persistableClass, Context context) {
-		super(context, "Sample", null, 1);
+	public PersonDatabaseHelper(Class persistableClass, String table, Context context) {
+		super(context, table, null, 1);
 		this.persistableClass = persistableClass;
 	}
 

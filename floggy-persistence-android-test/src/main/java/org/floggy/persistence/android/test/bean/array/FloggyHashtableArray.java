@@ -29,7 +29,8 @@ import org.floggy.persistence.android.PersistableManager;
  * @author <a href="mailto:thiago.moreira@floggy.org">Thiago Moreira</a>
  * @version $Revision$
   */
-public class FloggyHashtableArray implements Persistable, Deletable {
+@Persistable
+public class FloggyHashtableArray implements Deletable {
 	/**
 	 * DOCUMENT ME!
 	 */

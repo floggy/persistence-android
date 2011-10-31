@@ -25,7 +25,8 @@ package org.floggy.persistence.android;
  * <br>
  * <br>
  * <code>
- * public class Order implements Persistable, Deletable {<br>
+ * @Persistable
+ * public class Order implemets Deletable {<br>
  * &nbsp;&nbsp;protected Shipment shipment;<br>
  * &nbsp;public void delete() throws FloggyException {<br>
  * &nbsp;&nbsp;if (shipment != null) {<br>

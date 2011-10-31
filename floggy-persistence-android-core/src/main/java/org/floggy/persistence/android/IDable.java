@@ -27,7 +27,8 @@ package org.floggy.persistence.android;
  * <br>
  * <br>
  * <code>
- * public class Order implements Persistable, IDable {<br>
+ * @Persistable
+ * public class Order implements IDable {<br>
  * &nbsp;private int id;<br>
  * &nbsp;public void setId(int id) {<br>
  * &nbsp;&nbsp;this.id = id;<br>

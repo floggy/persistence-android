@@ -17,13 +17,15 @@ package org.floggy.persistence.android.test.animal;
 
 import org.floggy.persistence.android.Persistable;
 
+
 /**
  * DOCUMENT ME!
  *
  * @author <a href="mailto:thiago.moreira@floggy.org">Thiago Moreira</a>
  * @version $Revision$
   */
-public class Bird extends Animal implements Persistable {
+@Persistable
+public class Bird extends Animal {
 	private String color;
 
 	/**

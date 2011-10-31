@@ -4,7 +4,8 @@ import java.util.UUID;
 
 import org.floggy.persistence.android.Persistable;
 
-public class Agent implements Persistable {
+@Persistable(table="Agent")
+public class Agent {
 
 	protected String uid;
 	protected long valid;

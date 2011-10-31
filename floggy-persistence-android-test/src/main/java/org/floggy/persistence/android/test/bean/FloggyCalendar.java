@@ -25,7 +25,8 @@ import org.floggy.persistence.android.Persistable;
  * @author <a href="mailto:thiago.moreira@floggy.org">Thiago Moreira</a>
  * @version $Revision$
   */
-public class FloggyCalendar implements Persistable {
+@Persistable
+public class FloggyCalendar  {
 	/**
 	 * DOCUMENT ME!
 	 */

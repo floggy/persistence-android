@@ -23,7 +23,8 @@ import org.floggy.persistence.android.Persistable;
  * @author <a href="mailto:thiago.moreira@floggy.org">Thiago Moreira</a>
  * @version $Revision$
   */
-public class FloggyStaticAttribute implements Persistable {
+@Persistable
+public class FloggyStaticAttribute  {
 	public static Object x = null;
 
 	/**

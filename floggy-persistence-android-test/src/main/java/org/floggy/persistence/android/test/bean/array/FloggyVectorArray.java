@@ -29,7 +29,8 @@ import org.floggy.persistence.android.PersistableManager;
  * @author <a href="mailto:thiago.moreira@floggy.org">Thiago Moreira</a>
  * @version $Revision$
   */
-public class FloggyVectorArray implements Persistable, Deletable {
+@Persistable
+public class FloggyVectorArray implements Deletable {
 	private Vector[] x;
 
 	/**

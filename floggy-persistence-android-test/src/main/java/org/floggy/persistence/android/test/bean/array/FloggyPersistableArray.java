@@ -27,7 +27,8 @@ import org.floggy.persistence.android.test.bean.FloggyPersistable;
  * @author <a href="mailto:thiago.moreira@floggy.org">Thiago Moreira</a>
  * @version $Revision$
   */
-public class FloggyPersistableArray implements Persistable, Deletable {
+@Persistable
+public class FloggyPersistableArray implements Deletable {
 	/**
 	 * DOCUMENT ME!
 	 */

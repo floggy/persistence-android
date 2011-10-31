@@ -23,7 +23,8 @@ import org.floggy.persistence.android.Persistable;
  * @author <a href="mailto:thiago.moreira@floggy.org">Thiago Moreira</a>
  * @version $Revision$
   */
-public class FloggyNoneFields implements Persistable {
+@Persistable
+public class FloggyNoneFields  {
 	/**
 	* Returns <code>true</code> if this <code>FloggyTransient</code> is the
 	* same as the o argument.

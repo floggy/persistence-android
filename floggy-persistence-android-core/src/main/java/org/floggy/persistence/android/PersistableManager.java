@@ -50,12 +50,12 @@ public abstract class PersistableManager {
 	* Removes an object from the repository. If the object is not stored in
 	* the repository then a <code>FloggyException</code> will be thrown.
 	*
-	* @param persistable Object to be removed.
+	* @param object Object to be removed.
 	*
 	* @throws FloggyException Exception thrown if an error occurs while removing
 	* 				the object.
 	*/
-	public abstract void delete(Persistable persistable)
+	public abstract void delete(Object object)
 		throws FloggyException;
 
 	/**
@@ -70,16 +70,16 @@ public abstract class PersistableManager {
 	* Removes all objects that belongs to the class passed as parameter
 	* from the repository.
 	*
-	* @param persistableClass The persistable class to search the objects.
+	* @param objectClass The object class to search the objects.
 	*
 	* @throws FloggyException Exception thrown if an error occurs while removing
 	* 				the objects.
 	*/
-	public abstract void deleteAll(Class persistableClass)
+	public abstract void deleteAll(Class objectClass)
 		throws FloggyException;
 
 	/**
-	* Searches objects of an especific persistable class from the
+	* Searches objects of an especific object class from the
 	* repository. <br>
 	* <br>
 	* An optional application-defined search criteria can be  defined using a <code>Filter</code>.<br>
@@ -87,7 +87,7 @@ public abstract class PersistableManager {
 	* An optional application-defined sort order can be defined using a
 	* <code>Comparator</code>.
 	*
-	* @param persistableClass The persistable class to search the objects.
+	* @param objectClass The object class to search the objects.
 	* @param filter An optional application-defined criteria for searching
 	* 			 objects.
 	* @param comparator An optional application-defined criteria for sorting
@@ -97,11 +97,11 @@ public abstract class PersistableManager {
 	*
 	* @throws FloggyException DOCUMENT ME!
 	*/
-	public abstract ObjectSet find(Class persistableClass, Filter filter,
+	public abstract ObjectSet find(Class objectClass, Filter filter,
 		Comparator comparator) throws FloggyException;
 
 	/**
-	* Searches objects of an especific persistable class from the
+	* Searches objects of an especific object class from the
 	* repository. <br>
 	* <br>
 	* An optional application-defined search criteria can be  defined using a <code>Filter</code>.<br>
@@ -109,7 +109,7 @@ public abstract class PersistableManager {
 	* An optional application-defined sort order can be defined using a
 	* <code>Comparator</code>.
 	*
-	* @param persistableClass The persistable class to search the objects.
+	* @param objectClass The object class to search the objects.
 	* @param filter An optional application-defined criteria for searching
 	* 			 objects.
 	* @param comparator An optional application-defined criteria for sorting
@@ -120,37 +120,37 @@ public abstract class PersistableManager {
 	*
 	* @throws FloggyException DOCUMENT ME!
 	*/
-	public abstract ObjectSet find(Class persistableClass, Filter filter,
+	public abstract ObjectSet find(Class objectClass, Filter filter,
 		Comparator comparator, boolean lazy) throws FloggyException;
 
 	/**
-	* Gets the id under the persistable is stored. <br>
+	* Gets the id under the object is stored. <br>
 	*
-	* @param persistable Object to be retrieved the id.
+	* @param object Object to be retrieved the id.
 	*
-	* @return the id under the persistable is stored
+	* @return the id under the object is stored
 	*/
-	public abstract int getId(Persistable persistable);
+	public abstract int getId(Object object);
 
 	/**
 	* Check if the object is already persisted. <br>
 	* <b>WARNING</b> The method only checks if the underline system has an entry
-	* for the  given persistable object. The method doesn't checks if the
+	* for the  given object object. The method doesn't checks if the
 	* fields have changed.
 	*
-	* @param persistable Object to be checked the persistable state.
+	* @param object Object to be checked the object state.
 	*
 	* @return true if the object is already persisted in the underline system,
 	* 				false otherwise.
 	*/
-	public abstract boolean isPersisted(Persistable persistable);
+	public abstract boolean isPersisted(Object object);
 
 	/**
 	* Load an previously stored object from the repository using the object ID.<br>
 	* The object ID is the result of a save operation or you can obtain it
 	* executing a search.
 	*
-	* @param persistable An instance where the object data will be loaded into.
+	* @param object An instance where the object data will be loaded into.
 	* 			 Cannot be <code>null</code>.
 	* @param id The ID of the object to be loaded from the repository.
 	*
@@ -159,7 +159,7 @@ public abstract class PersistableManager {
 	*
 	* @see #save(Persistable)
 	*/
-	public abstract void load(Persistable persistable, long id)
+	public abstract void load(Object object, long id)
 		throws FloggyException;
 
 	/**
@@ -167,7 +167,7 @@ public abstract class PersistableManager {
 	* The object ID is the result of a save operation or you can obtain it
 	* executing a search.
 	*
-	* @param persistable An instance where the object data will be loaded into.
+	* @param object An instance where the object data will be loaded into.
 	* 			 Cannot be <code>null</code>.
 	* @param id The ID of the object to be loaded from the repository.
 	* @param lazy A flag indicating to load or not all composite relationships.
@@ -177,7 +177,7 @@ public abstract class PersistableManager {
 	*
 	* @see #save(Persistable)
 	*/
-	public abstract void load(Persistable persistable, long id, boolean lazy)
+	public abstract void load(Object object, long id, boolean lazy)
 		throws FloggyException;
 
 	/**
@@ -186,7 +186,7 @@ public abstract class PersistableManager {
 	* The object ID obtained from this operation can be used in the load
 	* operations.
 	*
-	* @param persistable Object to be stored.
+	* @param object Object to be stored.
 	*
 	* @return The ID of the object.
 	*
@@ -195,7 +195,7 @@ public abstract class PersistableManager {
 	*
 	* @see #load(Persistable, int)
 	*/
-	public abstract long save(Persistable persistable) throws FloggyException;
+	public abstract long save(Object object) throws FloggyException;
 
 	/**
 	* Set a property

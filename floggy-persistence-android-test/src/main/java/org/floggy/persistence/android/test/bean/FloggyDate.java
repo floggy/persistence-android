@@ -25,7 +25,8 @@ import org.floggy.persistence.android.Persistable;
  * @author <a href="mailto:thiago.moreira@floggy.org">Thiago Moreira</a>
  * @version $Revision$
   */
-public class FloggyDate implements Persistable {
+@Persistable
+public class FloggyDate  {
 	/**
 	 * DOCUMENT ME!
 	 */

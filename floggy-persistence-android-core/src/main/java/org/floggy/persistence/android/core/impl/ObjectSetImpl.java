@@ -16,11 +16,8 @@
 
 package org.floggy.persistence.android.core.impl;
 
-import java.util.Iterator;
-
 import org.floggy.persistence.android.FloggyException;
 import org.floggy.persistence.android.ObjectSet;
-import org.floggy.persistence.android.Persistable;
 
 import android.database.Cursor;
 
@@ -30,11 +27,11 @@ import android.database.Cursor;
  * @author <a href="mailto:thiago.moreira@floggy.org">Thiago Moreira</a>
  * @version $Revision$
   */
-public class ObjectSetImpl implements ObjectSet, Iterable<Persistable> {
+public class ObjectSetImpl implements ObjectSet {
 	/**
 	 * DOCUMENT ME!
 	 */
-	protected Class<Persistable> persistableClass;
+	protected Class persistableClass;
 
 	/**
 	 * DOCUMENT ME!
@@ -47,7 +44,7 @@ public class ObjectSetImpl implements ObjectSet, Iterable<Persistable> {
 	 * @param persistableClass DOCUMENT ME!
 	 * @param cursor DOCUMENT ME!
 	 */
-	public ObjectSetImpl(Class<Persistable> persistableClass, Cursor cursor) {
+	public ObjectSetImpl(Class persistableClass, Cursor cursor) {
 		this.persistableClass = persistableClass;
 		this.cursor = cursor;
 	}
@@ -61,12 +58,12 @@ public class ObjectSetImpl implements ObjectSet, Iterable<Persistable> {
 	*
 	* @throws FloggyException DOCUMENT ME!
 	*/
-	public Persistable get(int index) throws FloggyException {
+	public Object get(int index) throws FloggyException {
 		if (cursor.moveToNext()) {
-			Persistable persistable = null;
+			Object persistable = null;
 
 			try {
-				persistable = (Persistable) persistableClass.newInstance();
+				persistable = persistableClass.newInstance();
 				PersistableManagerAndroid.setValues(cursor, persistable);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -81,43 +78,10 @@ public class ObjectSetImpl implements ObjectSet, Iterable<Persistable> {
 	/**
 	 * DOCUMENT ME!
 	*
-	* @param index DOCUMENT ME!
-	* @param object DOCUMENT ME!
-	*
-	* @throws FloggyException DOCUMENT ME!
-	*/
-	public void get(int index, Persistable object) throws FloggyException {
-	}
-
-	/**
-	 * DOCUMENT ME!
-	*
-	* @param index DOCUMENT ME!
-	*
-	* @return DOCUMENT ME!
-	*
-	* @throws FloggyException DOCUMENT ME!
-	*/
-	public int getId(int index) throws FloggyException {
-		return 0;
-	}
-
-	/**
-	 * DOCUMENT ME!
-	*
 	* @return DOCUMENT ME!
 	*/
 	public boolean isLazy() {
 		return false;
-	}
-
-	/**
-	 * DOCUMENT ME!
-	*
-	* @return DOCUMENT ME!
-	*/
-	public Iterator<Persistable> iterator() {
-		return null;
 	}
 
 	/**

@@ -15,6 +15,7 @@
  */
 package org.floggy.persistence.android.core.impl;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
@@ -63,11 +64,11 @@ public class PersistableManagerAndroid extends PersistableManager {
 	/**
 	* DOCUMENT ME!
 	*
-	* @param persistable DOCUMENT ME!
+	* @param object DOCUMENT ME!
 	*
 	* @throws FloggyException DOCUMENT ME!
 	*/
-	public void delete(Persistable persistable) throws FloggyException {
+	public void delete(Object object) throws FloggyException {
 	}
 
 	/**
@@ -81,17 +82,17 @@ public class PersistableManagerAndroid extends PersistableManager {
 	/**
 	* DOCUMENT ME!
 	*
-	* @param persistableClass DOCUMENT ME!
+	* @param objectClass DOCUMENT ME!
 	*
 	* @throws FloggyException DOCUMENT ME!
 	*/
-	public void deleteAll(Class persistableClass) throws FloggyException {
+	public void deleteAll(Class objectClass) throws FloggyException {
 	}
 
 	/**
 	* DOCUMENT ME!
 	*
-	* @param persistableClass DOCUMENT ME!
+	* @param objectClass DOCUMENT ME!
 	* @param filter DOCUMENT ME!
 	* @param comparator DOCUMENT ME!
 	*
@@ -99,15 +100,15 @@ public class PersistableManagerAndroid extends PersistableManager {
 	*
 	* @throws FloggyException DOCUMENT ME!
 	*/
-	public ObjectSet find(Class persistableClass, Filter filter,
+	public ObjectSet find(Class objectClass, Filter filter,
 		Comparator comparator) throws FloggyException {
-		return find(persistableClass, filter, comparator, false);
+		return find(objectClass, filter, comparator, false);
 	}
 
 	/**
 	* DOCUMENT ME!
 	*
-	* @param persistableClass DOCUMENT ME!
+	* @param objectClass DOCUMENT ME!
 	* @param filter DOCUMENT ME!
 	* @param comparator DOCUMENT ME!
 	* @param lazy DOCUMENT ME!
@@ -116,127 +117,138 @@ public class PersistableManagerAndroid extends PersistableManager {
 	*
 	* @throws FloggyException DOCUMENT ME!
 	*/
-	public ObjectSet find(Class persistableClass, Filter filter,
+	public ObjectSet find(Class objectClass, Filter filter,
 		Comparator comparator, boolean lazy) throws FloggyException {
-		SQLiteOpenHelper helper = openHelpers.get(persistableClass.getName());
-
-		if (helper == null) {
-			helper = new PersonDatabaseHelper(persistableClass, context);
-		}
+		SQLiteOpenHelper helper = getSQLiteOpenHelper(objectClass);
 
 		SQLiteDatabase database = helper.getReadableDatabase();
 
 		Cursor cursor =
-			database.query(persistableClass.getSimpleName(), new String[] {"*"}, null, null,
+			database.query(objectClass.getSimpleName(), new String[] {"*"}, null, null,
 				null, null, null);
 
-		return new ObjectSetImpl(persistableClass, cursor);
+		return new ObjectSetImpl(objectClass, cursor);
 	}
 
 	/**
 	* DOCUMENT ME!
 	*
-	* @param persistable DOCUMENT ME!
+	* @param object DOCUMENT ME!
 	*
 	* @return DOCUMENT ME!
 	*/
-	public int getId(Persistable persistable) {
+	public int getId(Object object) {
 		return 0;
 	}
 
 	/**
 	* DOCUMENT ME!
 	*
-	* @param persistable DOCUMENT ME!
+	* @param object DOCUMENT ME!
 	*
 	* @return DOCUMENT ME!
 	*/
-	public boolean isPersisted(Persistable persistable) {
+	public boolean isPersisted(Object object) {
 		return false;
 	}
 
 	/**
 	* DOCUMENT ME!
 	*
-	* @param persistable DOCUMENT ME!
+	* @param object DOCUMENT ME!
 	* @param id DOCUMENT ME!
 	*
 	* @throws FloggyException DOCUMENT ME!
 	*/
-	public void load(Persistable persistable, long id) throws FloggyException {
-		load(persistable, id, false);
+	public void load(Object object, long id) throws FloggyException {
+		load(object, id, false);
+	}
+
+	protected SQLiteOpenHelper getSQLiteOpenHelper(Class objectClass) {
+		String className = objectClass.getName();
+		SQLiteOpenHelper helper = openHelpers.get(className);
+
+		if (helper == null) {
+			Annotation annotation = objectClass.getAnnotation(Persistable.class);
+			if (annotation != null) {
+				Persistable persistable = (Persistable) annotation;
+				String table = persistable.table();
+				helper = new PersonDatabaseHelper(objectClass, table, context);
+				openHelpers.put(className, helper);
+			}
+			else {
+				throw new IllegalArgumentException(className + " is not a valid Persistable class.");
+			}
+		}
+
+		return helper;
+	}
+
+	protected SQLiteOpenHelper getSQLiteOpenHelper(Object object) {
+		return getSQLiteOpenHelper(object.getClass()); 
 	}
 
 	/**
 	* DOCUMENT ME!
 	*
-	* @param persistable DOCUMENT ME!
+	* @param object DOCUMENT ME!
 	* @param id DOCUMENT ME!
 	* @param lazy DOCUMENT ME!
 	*
 	* @throws FloggyException DOCUMENT ME!
 	*/
-	public void load(Persistable persistable, long id, boolean lazy)
+	public void load(Object object, long id, boolean lazy)
 		throws FloggyException {
-		SQLiteOpenHelper helper = openHelpers.get(persistable.getClass().getName());
-
-		if (helper == null) {
-			helper = new PersonDatabaseHelper(persistable.getClass(), context);
-		}
+		SQLiteOpenHelper helper = getSQLiteOpenHelper(object);
 
 		SQLiteDatabase database = helper.getReadableDatabase();
 
-//		createTable(persistable.getClass(), database);
+//		createTable(object.getClass(), database);
 
 		Cursor cursor =
-			database.query(persistable.getClass().getSimpleName(), new String[] {"*"}, "_id=" + id,
+			database.query(object.getClass().getSimpleName(), new String[] {"*"}, "_id=" + id,
 				null, null, null, null);
 
 		if (cursor != null) {
 			cursor.moveToFirst();
-			setValues(cursor, persistable);
+			setValues(cursor, object);
 		}
 	}
 
 	/**
 	* DOCUMENT ME!
 	*
-	* @param persistable DOCUMENT ME!
+	* @param object DOCUMENT ME!
 	*
 	* @return DOCUMENT ME!
 	*
 	* @throws FloggyException DOCUMENT ME!
 	*/
-	public long save(Persistable persistable) throws FloggyException {
-		Class persistableClass = persistable.getClass();
-		SQLiteOpenHelper helper = openHelpers.get(persistableClass.getName());
-
-		if (helper == null) {
-			helper = new PersonDatabaseHelper(persistableClass, context);
-			openHelpers.put(persistableClass.getName(), helper);
-		}
+	public long save(Object object) throws FloggyException {
+		Class objectClass = object.getClass();
+		SQLiteOpenHelper helper = getSQLiteOpenHelper(object);
 
 		SQLiteDatabase database = helper.getWritableDatabase();
 
 		try {
-			createTable(persistableClass, database);
+			createTable(objectClass, database);
 		} catch (Exception e) {
 			e.printStackTrace();
 			// TODO: handle exception
 		}
 
-		return database.insert(persistableClass.getSimpleName(), null, getValues(persistable));
+		return database.insert(objectClass.getSimpleName(), null, getValues(object));
 	}
 
 	//TODO build this create statement at compile time
-	protected void createTable(Class persistableClass, SQLiteDatabase database) {
+	protected void createTable(Class objectClass, SQLiteDatabase database) {
 		StringBuilder builder = new StringBuilder();
 		
 		builder.append("create table ");
-		builder.append(persistableClass.getSimpleName());
+		builder.append(objectClass.getSimpleName());
 		builder.append(" (_id integer primary key autoincrement");
 		
-		Field[] fields = persistableClass.getDeclaredFields();
+		Field[] fields = objectClass.getDeclaredFields();
 
 		for (Field field : fields) {
 			try {
@@ -306,10 +318,10 @@ public class PersistableManagerAndroid extends PersistableManager {
 	*
 	* @return DOCUMENT ME!
 	*/
-	protected ContentValues getValues(Persistable persistable) throws FloggyException {
+	protected ContentValues getValues(Object object) throws FloggyException {
 		ContentValues values = new ContentValues();
 
-		Field[] fields = persistable.getClass().getDeclaredFields();
+		Field[] fields = object.getClass().getDeclaredFields();
 
 		for (Field field : fields) {
 			try {
@@ -320,7 +332,7 @@ public class PersistableManagerAndroid extends PersistableManager {
 					String fieldName = field.getName();
 					Class fieldType = field.getType();
 
-					Object value = Utils.getProperty(persistable, fieldName);
+					Object value = Utils.getProperty(object, fieldName);
 
 					System.out.println(value);
 					
@@ -359,9 +371,9 @@ public class PersistableManagerAndroid extends PersistableManager {
 	*
 	* @param cursor DOCUMENT ME!
 	*/
-	public static void setValues(Cursor cursor, Persistable persistable) throws FloggyException {
+	public static void setValues(Cursor cursor, Object object) throws FloggyException {
 		
-		Field[] fields = persistable.getClass().getDeclaredFields();
+		Field[] fields = object.getClass().getDeclaredFields();
 
 		for (Field field : fields) {
 			try {
@@ -375,21 +387,21 @@ public class PersistableManagerAndroid extends PersistableManager {
 					int columnIndex = cursor.getColumnIndex(fieldName);
 					
 					if (fieldType.equals(boolean.class) || fieldType.equals(Boolean.class)) {
-						//Utils.setProperty(persistable, fieldName, cursor.get)
+						//Utils.setProperty(object, fieldName, cursor.get)
 					} else if (fieldType.equals(byte.class) || fieldType.equals(Byte.class)) {
-						//Utils.setProperty(persistable, fieldName, cursor.get)
+						//Utils.setProperty(object, fieldName, cursor.get)
 					} else if (fieldType.equals(double.class) || fieldType.equals(Double.class)) {
-						Utils.setProperty(persistable, fieldName, fieldType, cursor.getDouble(columnIndex));
+						Utils.setProperty(object, fieldName, fieldType, cursor.getDouble(columnIndex));
 					} else if (fieldType.equals(float.class) || fieldType.equals(Float.class)) {
-						Utils.setProperty(persistable, fieldName, fieldType, cursor.getFloat(columnIndex));
+						Utils.setProperty(object, fieldName, fieldType, cursor.getFloat(columnIndex));
 					} else if (fieldType.equals(int.class) || fieldType.equals(Integer.class)) {
-						Utils.setProperty(persistable, fieldName, fieldType, cursor.getInt(columnIndex));
+						Utils.setProperty(object, fieldName, fieldType, cursor.getInt(columnIndex));
 					} else if (fieldType.equals(long.class) || fieldType.equals(Long.class)) {
-						Utils.setProperty(persistable, fieldName, fieldType, cursor.getLong(columnIndex));
+						Utils.setProperty(object, fieldName, fieldType, cursor.getLong(columnIndex));
 					} else if (fieldType.equals(short.class) || fieldType.equals(Short.class)) {
-						Utils.setProperty(persistable, fieldName, fieldType, cursor.getShort(columnIndex));
+						Utils.setProperty(object, fieldName, fieldType, cursor.getShort(columnIndex));
 					} else if (fieldType.equals(String.class)) {
-						Utils.setProperty(persistable, fieldName, fieldType, cursor.getString(columnIndex));
+						Utils.setProperty(object, fieldName, fieldType, cursor.getString(columnIndex));
 					}
 					
 				}

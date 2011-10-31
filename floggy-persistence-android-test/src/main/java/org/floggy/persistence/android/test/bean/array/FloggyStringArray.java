@@ -23,7 +23,8 @@ import org.floggy.persistence.android.Persistable;
  * @author <a href="mailto:thiago.moreira@floggy.org">Thiago Moreira</a>
  * @version $Revision$
   */
-public class FloggyStringArray implements Persistable {
+@Persistable
+public class FloggyStringArray  {
 	/**
 	 * DOCUMENT ME!
 	 */
