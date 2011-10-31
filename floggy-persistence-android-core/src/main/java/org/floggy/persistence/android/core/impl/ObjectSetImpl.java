@@ -59,7 +59,7 @@ public class ObjectSetImpl implements ObjectSet {
 
 			try {
 				persistable = persistableClass.newInstance();
-				PersistableManagerAndroid.setValues(cursor, persistable);
+				Utils.setValues(cursor, persistable);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

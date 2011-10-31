@@ -16,7 +16,6 @@
 package org.floggy.persistence.android.test;
 
 import org.floggy.persistence.android.PersistableManager;
-import org.floggy.persistence.android.core.impl.PersistableManagerAndroid;
 
 import android.test.AndroidTestCase;
 
@@ -34,7 +33,7 @@ public class PersistableManagerTest extends AndroidTestCase {
 		PersistableManager manager = PersistableManager.getInstance(getContext());
 
 		assertNotNull(manager);
-		assertEquals(PersistableManagerAndroid.class, manager.getClass());
+		assertEquals(PersistableManager.class, manager.getClass());
 	}
 
 	/**

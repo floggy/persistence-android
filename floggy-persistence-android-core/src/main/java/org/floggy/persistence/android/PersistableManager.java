@@ -15,21 +15,28 @@
  */
 package org.floggy.persistence.android;
 
-import org.floggy.persistence.android.core.impl.PersistableManagerAndroid;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
+import org.floggy.persistence.android.core.impl.DatabaseHelper;
+import org.floggy.persistence.android.core.impl.ObjectSetImpl;
+import org.floggy.persistence.android.core.impl.Utils;
+
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 /**
 * This is the main class of the framework. All persistence operations
 * methods (such as loading, saving, deleting and searching for objects) are
 * declared in this class.
  */
-public abstract class PersistableManager {
+public class PersistableManager {
 	public static final String BATCH_MODE = "BATCH_MODE";
 
 	/** The single instance of PersistableManager. */
 	private static PersistableManager instance;
-
 	/**
 	* Returns the current instance of PersistableManager.
 	*
@@ -45,10 +52,76 @@ public abstract class PersistableManager {
 		}
 
 		if (instance == null) {
-			instance = new PersistableManagerAndroid(context);
+			instance = new PersistableManager(context);
 		}
 
 		return instance;
+	}
+
+	/** DOCUMENT ME! */
+	protected DatabaseHelper databaseHelper;
+	private PersistableManager(Context context) {
+		this.databaseHelper = new DatabaseHelper("Floggy", context);
+	}
+
+	/**
+	* DOCUMENT ME!
+	*
+	* @param objectClass DOCUMENT ME!
+	* @param database DOCUMENT ME!
+	*/
+	protected void createTable(Class objectClass, SQLiteDatabase database) {
+		StringBuilder builder = new StringBuilder();
+
+		builder.append("create table ");
+		builder.append(objectClass.getSimpleName());
+		builder.append(" (_id integer primary key autoincrement");
+
+		Field[] fields = objectClass.getDeclaredFields();
+
+		for (Field field : fields) {
+			try {
+				int modifier = field.getModifiers();
+
+				if (!(Modifier.isStatic(modifier) || Modifier.isTransient(modifier))) {
+					builder.append(", ");
+
+					String fieldName = field.getName();
+					Class fieldType = field.getType();
+
+					if (fieldType.equals(boolean.class)
+						 || fieldType.equals(Boolean.class)) {
+					} else if (fieldType.equals(byte.class)
+						 || fieldType.equals(Byte.class)) {
+					} else if (fieldType.equals(double.class)
+						 || fieldType.equals(Double.class)) {
+					} else if (fieldType.equals(float.class)
+						 || fieldType.equals(Float.class)) {
+					} else if (fieldType.equals(int.class)
+						 || fieldType.equals(Integer.class)) {
+						builder.append(fieldName);
+						builder.append(" integer");
+					} else if (fieldType.equals(long.class)
+						 || fieldType.equals(Long.class)) {
+						builder.append(fieldName);
+						builder.append(" long");
+					} else if (fieldType.equals(short.class)
+						 || fieldType.equals(Short.class)) {
+					} else if (fieldType.equals(String.class)) {
+						builder.append(fieldName);
+						builder.append(" text");
+					}
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+
+		builder.append(")");
+
+		System.out.println(builder);
+
+		database.execSQL(builder.toString());
 	}
 
 	/**
@@ -60,7 +133,8 @@ public abstract class PersistableManager {
 	* @throws FloggyException Exception thrown if an error occurs while removing
 	* 				the object.
 	*/
-	public abstract void delete(Object object) throws FloggyException;
+	public void delete(Object object) throws FloggyException {
+	}
 
 	/**
 	* Removes all objects from the repository.
@@ -68,7 +142,8 @@ public abstract class PersistableManager {
 	* @throws FloggyException Exception thrown if an error occurs while removing
 	* 				the objects.
 	*/
-	public abstract void deleteAll() throws FloggyException;
+	public void deleteAll() throws FloggyException {
+	}
 
 	/**
 	* Removes all objects that belongs to the class passed as parameter
@@ -79,7 +154,8 @@ public abstract class PersistableManager {
 	* @throws FloggyException Exception thrown if an error occurs while removing
 	* 				the objects.
 	*/
-	public abstract void deleteAll(Class objectClass) throws FloggyException;
+	public void deleteAll(Class objectClass) throws FloggyException {
+	}
 
 	/**
 	* Searches objects of an especific object class from the repository. <br>
@@ -99,8 +175,10 @@ public abstract class PersistableManager {
 	*
 	* @throws FloggyException DOCUMENT ME!
 	*/
-	public abstract ObjectSet find(Class objectClass, Filter filter,
-		Comparator comparator) throws FloggyException;
+	public ObjectSet find(Class objectClass, Filter filter,
+		Comparator comparator) throws FloggyException {
+		return find(objectClass, filter, comparator, false);
+	}
 
 	/**
 	* Searches objects of an especific object class from the repository. <br>
@@ -121,8 +199,16 @@ public abstract class PersistableManager {
 	*
 	* @throws FloggyException DOCUMENT ME!
 	*/
-	public abstract ObjectSet find(Class objectClass, Filter filter,
-		Comparator comparator, boolean lazy) throws FloggyException;
+	public ObjectSet find(Class objectClass, Filter filter,
+		Comparator comparator, boolean lazy) throws FloggyException {
+		SQLiteDatabase database = databaseHelper.getReadableDatabase();
+
+		Cursor cursor =
+			database.query(objectClass.getSimpleName(), new String[] { "*" }, null,
+				null, null, null, null);
+
+		return new ObjectSetImpl(objectClass, cursor);
+	}
 
 	/**
 	* Gets the id under the object is stored. <br>
@@ -131,7 +217,70 @@ public abstract class PersistableManager {
 	*
 	* @return the id under the object is stored
 	*/
-	public abstract int getId(Object object);
+	public long getId(Object object) {
+		return -1;
+	}
+
+	/**
+	* DOCUMENT ME!
+	*
+	* @param object DOCUMENT ME!
+	*
+	* @return DOCUMENT ME!
+	*
+	* @throws FloggyException DOCUMENT ME!
+	*/
+	protected ContentValues getValues(Object object) throws FloggyException {
+		ContentValues values = new ContentValues();
+
+		Field[] fields = object.getClass().getDeclaredFields();
+
+		for (Field field : fields) {
+			try {
+				int modifier = field.getModifiers();
+
+				if (!(Modifier.isStatic(modifier) || Modifier.isTransient(modifier))) {
+					String fieldName = field.getName();
+					Class fieldType = field.getType();
+
+					Object value = Utils.getProperty(object, fieldName);
+
+					System.out.println(value);
+
+					if (fieldType.equals(boolean.class)
+						 || fieldType.equals(Boolean.class)) {
+						values.put(field.getName(), (Boolean) value);
+					} else if (fieldType.equals(byte.class)
+						 || fieldType.equals(Byte.class)) {
+						values.put(field.getName(), (Byte) value);
+					} else if (fieldType.equals(double.class)
+						 || fieldType.equals(Double.class)) {
+						values.put(field.getName(), (Double) value);
+					} else if (fieldType.equals(float.class)
+						 || fieldType.equals(Float.class)) {
+						values.put(field.getName(), (Float) value);
+					} else if (fieldType.equals(int.class)
+						 || fieldType.equals(Integer.class)) {
+						values.put(field.getName(), (Integer) value);
+					} else if (fieldType.equals(long.class)
+						 || fieldType.equals(Long.class)) {
+						values.put(field.getName(), (Long) value);
+					} else if (fieldType.equals(short.class)
+						 || fieldType.equals(Short.class)) {
+						values.put(field.getName(), (Short) value);
+					} else if (fieldType.equals(String.class)) {
+						values.put(field.getName(), (String) value);
+					}
+				}
+			} catch (Exception ex) {
+				throw Utils.handleException(ex);
+			}
+		}
+
+		System.out.println(values.toString());
+
+		return values;
+	}
 
 	/**
 	* Check if the object is already persisted. <br>
@@ -144,7 +293,9 @@ public abstract class PersistableManager {
 	* @return true if the object is already persisted in the underline system,
 	* 				false otherwise.
 	*/
-	public abstract boolean isPersisted(Object object);
+	public boolean isPersisted(Object object) {
+		return false;
+	}
 
 	/**
 	* Load an previously stored object from the repository using the object ID.<br>
@@ -160,7 +311,9 @@ public abstract class PersistableManager {
 	*
 	* @see #save(Persistable)
 	*/
-	public abstract void load(Object object, long id) throws FloggyException;
+	public void load(Object object, long id) throws FloggyException {
+		load(object, id, false);
+	}
 
 	/**
 	* Load an previously stored object from the repository using the object ID.<br>
@@ -177,8 +330,20 @@ public abstract class PersistableManager {
 	*
 	* @see #save(Persistable)
 	*/
-	public abstract void load(Object object, long id, boolean lazy)
-		throws FloggyException;
+	public void load(Object object, long id, boolean lazy)
+		throws FloggyException {
+		SQLiteDatabase database = databaseHelper.getReadableDatabase();
+
+		Cursor cursor =
+			database.query(object.getClass().getSimpleName(), new String[] { "*" },
+				"_id=" + id, null, null, null, null);
+
+		if (cursor != null) {
+			cursor.moveToFirst();
+			Utils.setValues(cursor, object);
+		}
+
+	}
 
 	/**
 	* Store an object in the repository. If the object is already in the
@@ -195,7 +360,19 @@ public abstract class PersistableManager {
 	*
 	* @see #load(Persistable, int)
 	*/
-	public abstract long save(Object object) throws FloggyException;
+	public long save(Object object) throws FloggyException {
+		Class objectClass = object.getClass();
+
+		SQLiteDatabase database = databaseHelper.getWritableDatabase();
+
+		try {
+			createTable(objectClass, database);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return database.insert(objectClass.getSimpleName(), null, getValues(object));
+	}
 
 	/**
 	* Set a property
@@ -203,12 +380,14 @@ public abstract class PersistableManager {
 	* @param name the property's name
 	* @param value the property's value
 	*/
-	public abstract void setProperty(String name, Object value);
+	public void setProperty(String name, Object value) {
+	}
 
 	/**
 	* Shutdown the PersistableManager.
 	*
 	* @throws FloggyException DOCUMENT ME!
 	*/
-	public abstract void shutdown() throws FloggyException;
+	public void shutdown() throws FloggyException {
+	}
 }
