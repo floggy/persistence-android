@@ -26,19 +26,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 * @author <a href="mailto:thiago.moreira@floggy.org">Thiago Moreira</a>
 * @version $Revision$
  */
-public class PersonDatabaseHelper extends SQLiteOpenHelper {
-	/** DOCUMENT ME! */
-	protected Class persistableClass;
-
+public class DatabaseHelper extends SQLiteOpenHelper {
 /**
    * Creates a new PersonDatabaseHelper object.
    *
    * @param context DOCUMENT ME!
    */
-	public PersonDatabaseHelper(Class persistableClass, String table,
-		Context context) {
-		super(context, context.getApplicationInfo().name, null, 1);
-		this.persistableClass = persistableClass;
+	public DatabaseHelper(String databaseName, Context context) {
+		super(context, databaseName, null, 1);
 	}
 
 	/**

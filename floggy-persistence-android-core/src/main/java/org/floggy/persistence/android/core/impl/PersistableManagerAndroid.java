@@ -15,28 +15,19 @@
  */
 package org.floggy.persistence.android.core.impl;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-
-import java.util.HashMap;
 
 import org.floggy.persistence.android.Comparator;
 import org.floggy.persistence.android.Filter;
 import org.floggy.persistence.android.FloggyException;
 import org.floggy.persistence.android.ObjectSet;
-import org.floggy.persistence.android.Persistable;
 import org.floggy.persistence.android.PersistableManager;
 
 import android.content.ContentValues;
 import android.content.Context;
-
 import android.database.Cursor;
-
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-
-import android.util.Log;
 
 /**
 * DOCUMENT ME!
@@ -46,10 +37,7 @@ import android.util.Log;
  */
 public class PersistableManagerAndroid extends PersistableManager {
 	/** DOCUMENT ME! */
-	protected Context context;
-
-	/** DOCUMENT ME! */
-	protected HashMap<String, SQLiteOpenHelper> openHelpers;
+	protected DatabaseHelper databaseHelper;
 
 /**
    * Creates a new PersistableManagerAndroid object.
@@ -57,8 +45,7 @@ public class PersistableManagerAndroid extends PersistableManager {
    * @param context DOCUMENT ME!
    */
 	public PersistableManagerAndroid(Context context) {
-		this.context = context;
-		this.openHelpers = new HashMap<String, SQLiteOpenHelper>();
+		this.databaseHelper = new DatabaseHelper("Floggy", context);
 	}
 
 	/**
@@ -119,9 +106,8 @@ public class PersistableManagerAndroid extends PersistableManager {
 	*/
 	public ObjectSet find(Class objectClass, Filter filter,
 		Comparator comparator, boolean lazy) throws FloggyException {
-		SQLiteOpenHelper helper = getSQLiteOpenHelper(objectClass);
 
-		SQLiteDatabase database = helper.getReadableDatabase();
+		SQLiteDatabase database = databaseHelper.getReadableDatabase();
 
 		Cursor cursor =
 			database.query(objectClass.getSimpleName(), new String[] { "*" }, null,
@@ -175,9 +161,8 @@ public class PersistableManagerAndroid extends PersistableManager {
 	*/
 	public void load(Object object, long id, boolean lazy)
 		throws FloggyException {
-		SQLiteOpenHelper helper = getSQLiteOpenHelper(object);
 
-		SQLiteDatabase database = helper.getReadableDatabase();
+		SQLiteDatabase database = databaseHelper.getReadableDatabase();
 
 		Cursor cursor =
 			database.query(object.getClass().getSimpleName(), new String[] { "*" },
@@ -200,9 +185,8 @@ public class PersistableManagerAndroid extends PersistableManager {
 	*/
 	public long save(Object object) throws FloggyException {
 		Class objectClass = object.getClass();
-		SQLiteOpenHelper helper = getSQLiteOpenHelper(object);
 
-		SQLiteDatabase database = helper.getWritableDatabase();
+		SQLiteDatabase database = databaseHelper.getWritableDatabase();
 
 		try {
 			createTable(objectClass, database);
@@ -345,50 +329,6 @@ public class PersistableManagerAndroid extends PersistableManager {
 		System.out.println(builder);
 
 		database.execSQL(builder.toString());
-	}
-
-	/**
-	* DOCUMENT ME!
-	*
-	* @param objectClass DOCUMENT ME!
-	*
-	* @return DOCUMENT ME!
-	*
-	* @throws IllegalArgumentException DOCUMENT ME!
-	*/
-	protected SQLiteOpenHelper getSQLiteOpenHelper(Class objectClass) {
-		String className = objectClass.getName();
-		SQLiteOpenHelper helper = openHelpers.get(className);
-
-		if (helper == null) {
-			Annotation annotation = objectClass.getAnnotation(Persistable.class);
-
-			if (annotation != null) {
-				Persistable persistable = (Persistable) annotation;
-				String table = persistable.table();
-				Log.v(Context.ACTIVITY_SERVICE,
-					String.valueOf(context.getApplicationInfo()));
-				Log.v(Context.ACTIVITY_SERVICE, context.getApplicationInfo().name);
-				helper = new PersonDatabaseHelper(objectClass, table, context);
-				openHelpers.put(className, helper);
-			} else {
-				throw new IllegalArgumentException(className
-					+ " is not a valid Persistable class.");
-			}
-		}
-
-		return helper;
-	}
-
-	/**
-	* DOCUMENT ME!
-	*
-	* @param object DOCUMENT ME!
-	*
-	* @return DOCUMENT ME!
-	*/
-	protected SQLiteOpenHelper getSQLiteOpenHelper(Object object) {
-		return getSQLiteOpenHelper(object.getClass());
 	}
 
 	/**
