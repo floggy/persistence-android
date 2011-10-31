@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2010 Floggy Open Source Group. All rights reserved.
+ * Copyright (c) 2006-2011 Floggy Open Source Group. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,49 +13,55 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.floggy.persistence.android.core.impl;
 
 import android.content.Context;
+
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 /**
- * DOCUMENT ME!
- *
- * @author <a href="mailto:thiago.moreira@floggy.org">Thiago Moreira</a>
- * @version $Revision$
-  */
+* DOCUMENT ME!
+*
+* @author <a href="mailto:thiago.moreira@floggy.org">Thiago Moreira</a>
+* @version $Revision$
+ */
 public class PersonDatabaseHelper extends SQLiteOpenHelper {
-	
+	/** DOCUMENT ME! */
 	protected Class persistableClass;
-	/**
-	 * Creates a new PersonDatabaseHelper object.
-	 *
-	 * @param context DOCUMENT ME!
-	 */
-	public PersonDatabaseHelper(Class persistableClass, String table, Context context) {
-		super(context, table, null, 1);
+
+/**
+   * Creates a new PersonDatabaseHelper object.
+   *
+   * @param context DOCUMENT ME!
+   */
+	public PersonDatabaseHelper(Class persistableClass, String table,
+		Context context) {
+		super(context, context.getApplicationInfo().name, null, 1);
 		this.persistableClass = persistableClass;
 	}
 
 	/**
-	 * DOCUMENT ME!
+	* DOCUMENT ME!
 	*
 	* @param db DOCUMENT ME!
 	*/
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 	}
-	
+
+	/**
+	* DOCUMENT ME!
+	*
+	* @param db DOCUMENT ME!
+	*/
 	@Override
 	public void onOpen(SQLiteDatabase db) {
-		// TODO Auto-generated method stub
 		super.onOpen(db);
 	}
 
 	/**
-	 * DOCUMENT ME!
+	* DOCUMENT ME!
 	*
 	* @param db DOCUMENT ME!
 	* @param oldVersion DOCUMENT ME!

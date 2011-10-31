@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2010 Floggy Open Source Group. All rights reserved.
+ * Copyright (c) 2006-2011 Floggy Open Source Group. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import android.content.Context;
 * This is the main class of the framework. All persistence operations
 * methods (such as loading, saving, deleting and searching for objects) are
 * declared in this class.
-*
  */
 public abstract class PersistableManager {
 	public static final String BATCH_MODE = "BATCH_MODE";
@@ -37,11 +36,14 @@ public abstract class PersistableManager {
 	* @param context DOCUMENT ME!
 	*
 	* @return The current instance of PersistableManager.
+	*
+	* @throws IllegalArgumentException DOCUMENT ME!
 	*/
 	public static PersistableManager getInstance(Context context) {
 		if (context == null) {
 			throw new IllegalArgumentException("Context cannot be null");
 		}
+
 		if (instance == null) {
 			instance = new PersistableManagerAndroid(context);
 		}
@@ -58,8 +60,7 @@ public abstract class PersistableManager {
 	* @throws FloggyException Exception thrown if an error occurs while removing
 	* 				the object.
 	*/
-	public abstract void delete(Object object)
-		throws FloggyException;
+	public abstract void delete(Object object) throws FloggyException;
 
 	/**
 	* Removes all objects from the repository.
@@ -78,12 +79,10 @@ public abstract class PersistableManager {
 	* @throws FloggyException Exception thrown if an error occurs while removing
 	* 				the objects.
 	*/
-	public abstract void deleteAll(Class objectClass)
-		throws FloggyException;
+	public abstract void deleteAll(Class objectClass) throws FloggyException;
 
 	/**
-	* Searches objects of an especific object class from the
-	* repository. <br>
+	* Searches objects of an especific object class from the repository. <br>
 	* <br>
 	* An optional application-defined search criteria can be  defined using a <code>Filter</code>.<br>
 	* <br>
@@ -104,8 +103,7 @@ public abstract class PersistableManager {
 		Comparator comparator) throws FloggyException;
 
 	/**
-	* Searches objects of an especific object class from the
-	* repository. <br>
+	* Searches objects of an especific object class from the repository. <br>
 	* <br>
 	* An optional application-defined search criteria can be  defined using a <code>Filter</code>.<br>
 	* <br>
@@ -138,8 +136,8 @@ public abstract class PersistableManager {
 	/**
 	* Check if the object is already persisted. <br>
 	* <b>WARNING</b> The method only checks if the underline system has an entry
-	* for the  given object object. The method doesn't checks if the
-	* fields have changed.
+	* for the  given object object. The method doesn't checks if the fields
+	* have changed.
 	*
 	* @param object Object to be checked the object state.
 	*
@@ -162,8 +160,7 @@ public abstract class PersistableManager {
 	*
 	* @see #save(Persistable)
 	*/
-	public abstract void load(Object object, long id)
-		throws FloggyException;
+	public abstract void load(Object object, long id) throws FloggyException;
 
 	/**
 	* Load an previously stored object from the repository using the object ID.<br>

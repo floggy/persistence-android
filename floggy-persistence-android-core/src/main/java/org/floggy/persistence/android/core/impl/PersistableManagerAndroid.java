@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2010 Floggy Open Source Group. All rights reserved.
+ * Copyright (c) 2006-2011 Floggy Open Source Group. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package org.floggy.persistence.android.core.impl;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+
 import java.util.HashMap;
 
 import org.floggy.persistence.android.Comparator;
@@ -29,9 +30,13 @@ import org.floggy.persistence.android.PersistableManager;
 
 import android.content.ContentValues;
 import android.content.Context;
+
 import android.database.Cursor;
+
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import android.util.Log;
 
 /**
 * DOCUMENT ME!
@@ -40,24 +45,19 @@ import android.database.sqlite.SQLiteOpenHelper;
 * @version $Revision$
  */
 public class PersistableManagerAndroid extends PersistableManager {
-	/**
-	 * DOCUMENT ME!
-	 */
+	/** DOCUMENT ME! */
 	protected Context context;
 
-	/**
-	 * DOCUMENT ME!
-	 */
+	/** DOCUMENT ME! */
 	protected HashMap<String, SQLiteOpenHelper> openHelpers;
 
-	/**
-	 * Creates a new PersistableManagerAndroid object.
-	 *
-	 * @param context DOCUMENT ME!
-	 */
+/**
+   * Creates a new PersistableManagerAndroid object.
+   *
+   * @param context DOCUMENT ME!
+   */
 	public PersistableManagerAndroid(Context context) {
 		this.context = context;
-
 		this.openHelpers = new HashMap<String, SQLiteOpenHelper>();
 	}
 
@@ -100,8 +100,8 @@ public class PersistableManagerAndroid extends PersistableManager {
 	*
 	* @throws FloggyException DOCUMENT ME!
 	*/
-	public ObjectSet find(Class objectClass, Filter filter,
-		Comparator comparator) throws FloggyException {
+	public ObjectSet find(Class objectClass, Filter filter, Comparator comparator)
+		throws FloggyException {
 		return find(objectClass, filter, comparator, false);
 	}
 
@@ -124,8 +124,8 @@ public class PersistableManagerAndroid extends PersistableManager {
 		SQLiteDatabase database = helper.getReadableDatabase();
 
 		Cursor cursor =
-			database.query(objectClass.getSimpleName(), new String[] {"*"}, null, null,
-				null, null, null);
+			database.query(objectClass.getSimpleName(), new String[] { "*" }, null,
+				null, null, null, null);
 
 		return new ObjectSetImpl(objectClass, cursor);
 	}
@@ -164,30 +164,6 @@ public class PersistableManagerAndroid extends PersistableManager {
 		load(object, id, false);
 	}
 
-	protected SQLiteOpenHelper getSQLiteOpenHelper(Class objectClass) {
-		String className = objectClass.getName();
-		SQLiteOpenHelper helper = openHelpers.get(className);
-
-		if (helper == null) {
-			Annotation annotation = objectClass.getAnnotation(Persistable.class);
-			if (annotation != null) {
-				Persistable persistable = (Persistable) annotation;
-				String table = persistable.table();
-				helper = new PersonDatabaseHelper(objectClass, table, context);
-				openHelpers.put(className, helper);
-			}
-			else {
-				throw new IllegalArgumentException(className + " is not a valid Persistable class.");
-			}
-		}
-
-		return helper;
-	}
-
-	protected SQLiteOpenHelper getSQLiteOpenHelper(Object object) {
-		return getSQLiteOpenHelper(object.getClass()); 
-	}
-
 	/**
 	* DOCUMENT ME!
 	*
@@ -203,11 +179,9 @@ public class PersistableManagerAndroid extends PersistableManager {
 
 		SQLiteDatabase database = helper.getReadableDatabase();
 
-//		createTable(object.getClass(), database);
-
 		Cursor cursor =
-			database.query(object.getClass().getSimpleName(), new String[] {"*"}, "_id=" + id,
-				null, null, null, null);
+			database.query(object.getClass().getSimpleName(), new String[] { "*" },
+				"_id=" + id, null, null, null, null);
 
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -234,66 +208,9 @@ public class PersistableManagerAndroid extends PersistableManager {
 			createTable(objectClass, database);
 		} catch (Exception e) {
 			e.printStackTrace();
-			// TODO: handle exception
 		}
 
 		return database.insert(objectClass.getSimpleName(), null, getValues(object));
-	}
-
-	//TODO build this create statement at compile time
-	protected void createTable(Class objectClass, SQLiteDatabase database) {
-		StringBuilder builder = new StringBuilder();
-		
-		builder.append("create table ");
-		builder.append(objectClass.getSimpleName());
-		builder.append(" (_id integer primary key autoincrement");
-		
-		Field[] fields = objectClass.getDeclaredFields();
-
-		for (Field field : fields) {
-			try {
-				int modifier = field.getModifiers();
-				
-				if (!(Modifier.isStatic(modifier) || Modifier.isTransient(modifier))) {
-
-					builder.append(", ");
-
-					String fieldName = field.getName();
-					Class fieldType = field.getType();
-
-					if (fieldType.equals(boolean.class) || fieldType.equals(Boolean.class)) {
-//						values.put(field.getName(), (Boolean)value);
-					} else if (fieldType.equals(byte.class) || fieldType.equals(Byte.class)) {
-//						values.put(field.getName(), (Byte)value);
-					} else if (fieldType.equals(double.class) || fieldType.equals(Double.class)) {
-//						values.put(field.getName(), (Double)value);
-					} else if (fieldType.equals(float.class) || fieldType.equals(Float.class)) {
-//						values.put(field.getName(), (Float)value);
-					} else if (fieldType.equals(int.class) || fieldType.equals(Integer.class)) {
-						builder.append(fieldName);
-						builder.append(" integer");
-					} else if (fieldType.equals(long.class) || fieldType.equals(Long.class)) {
-						builder.append(fieldName);
-						builder.append(" long");
-					} else if (fieldType.equals(short.class) || fieldType.equals(Short.class)) {
-//						values.put(field.getName(), (Short)value);
-					} else if (fieldType.equals(String.class)) {
-						builder.append(fieldName);
-						builder.append(" text");
-					}
-					
-				}
-				
-
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		}
-		builder.append(")");
-
-		System.out.println(builder);
-
-		database.execSQL(builder.toString());
 	}
 
 	/**
@@ -308,15 +225,180 @@ public class PersistableManagerAndroid extends PersistableManager {
 	/**
 	* DOCUMENT ME!
 	*
+	* @param cursor DOCUMENT ME!
+	* @param object DOCUMENT ME!
+	*
+	* @throws FloggyException DOCUMENT ME!
+	*/
+	public static void setValues(Cursor cursor, Object object)
+		throws FloggyException {
+		Field[] fields = object.getClass().getDeclaredFields();
+
+		for (Field field : fields) {
+			try {
+				int modifier = field.getModifiers();
+
+				if (!(Modifier.isStatic(modifier) || Modifier.isTransient(modifier))) {
+					String fieldName = field.getName();
+					Class fieldType = field.getType();
+
+					int columnIndex = cursor.getColumnIndex(fieldName);
+
+					if (fieldType.equals(boolean.class)
+						 || fieldType.equals(Boolean.class)) {
+					} else if (fieldType.equals(byte.class)
+						 || fieldType.equals(Byte.class)) {
+					} else if (fieldType.equals(double.class)
+						 || fieldType.equals(Double.class)) {
+						Utils.setProperty(object, fieldName, fieldType,
+							cursor.getDouble(columnIndex));
+					} else if (fieldType.equals(float.class)
+						 || fieldType.equals(Float.class)) {
+						Utils.setProperty(object, fieldName, fieldType,
+							cursor.getFloat(columnIndex));
+					} else if (fieldType.equals(int.class)
+						 || fieldType.equals(Integer.class)) {
+						Utils.setProperty(object, fieldName, fieldType,
+							cursor.getInt(columnIndex));
+					} else if (fieldType.equals(long.class)
+						 || fieldType.equals(Long.class)) {
+						Utils.setProperty(object, fieldName, fieldType,
+							cursor.getLong(columnIndex));
+					} else if (fieldType.equals(short.class)
+						 || fieldType.equals(Short.class)) {
+						Utils.setProperty(object, fieldName, fieldType,
+							cursor.getShort(columnIndex));
+					} else if (fieldType.equals(String.class)) {
+						Utils.setProperty(object, fieldName, fieldType,
+							cursor.getString(columnIndex));
+					}
+				}
+			} catch (Exception ex) {
+				throw Utils.handleException(ex);
+			}
+		}
+	}
+
+	/**
+	* DOCUMENT ME!
+	*
 	* @throws FloggyException DOCUMENT ME!
 	*/
 	public void shutdown() throws FloggyException {
 	}
-	
+
 	/**
-	 * DOCUMENT ME!
+	* DOCUMENT ME!
+	*
+	* @param objectClass DOCUMENT ME!
+	* @param database DOCUMENT ME!
+	*/
+	protected void createTable(Class objectClass, SQLiteDatabase database) {
+		StringBuilder builder = new StringBuilder();
+
+		builder.append("create table ");
+		builder.append(objectClass.getSimpleName());
+		builder.append(" (_id integer primary key autoincrement");
+
+		Field[] fields = objectClass.getDeclaredFields();
+
+		for (Field field : fields) {
+			try {
+				int modifier = field.getModifiers();
+
+				if (!(Modifier.isStatic(modifier) || Modifier.isTransient(modifier))) {
+					builder.append(", ");
+
+					String fieldName = field.getName();
+					Class fieldType = field.getType();
+
+					if (fieldType.equals(boolean.class)
+						 || fieldType.equals(Boolean.class)) {
+					} else if (fieldType.equals(byte.class)
+						 || fieldType.equals(Byte.class)) {
+					} else if (fieldType.equals(double.class)
+						 || fieldType.equals(Double.class)) {
+					} else if (fieldType.equals(float.class)
+						 || fieldType.equals(Float.class)) {
+					} else if (fieldType.equals(int.class)
+						 || fieldType.equals(Integer.class)) {
+						builder.append(fieldName);
+						builder.append(" integer");
+					} else if (fieldType.equals(long.class)
+						 || fieldType.equals(Long.class)) {
+						builder.append(fieldName);
+						builder.append(" long");
+					} else if (fieldType.equals(short.class)
+						 || fieldType.equals(Short.class)) {
+					} else if (fieldType.equals(String.class)) {
+						builder.append(fieldName);
+						builder.append(" text");
+					}
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+
+		builder.append(")");
+
+		System.out.println(builder);
+
+		database.execSQL(builder.toString());
+	}
+
+	/**
+	* DOCUMENT ME!
+	*
+	* @param objectClass DOCUMENT ME!
 	*
 	* @return DOCUMENT ME!
+	*
+	* @throws IllegalArgumentException DOCUMENT ME!
+	*/
+	protected SQLiteOpenHelper getSQLiteOpenHelper(Class objectClass) {
+		String className = objectClass.getName();
+		SQLiteOpenHelper helper = openHelpers.get(className);
+
+		if (helper == null) {
+			Annotation annotation = objectClass.getAnnotation(Persistable.class);
+
+			if (annotation != null) {
+				Persistable persistable = (Persistable) annotation;
+				String table = persistable.table();
+				Log.v(Context.ACTIVITY_SERVICE,
+					String.valueOf(context.getApplicationInfo()));
+				Log.v(Context.ACTIVITY_SERVICE, context.getApplicationInfo().name);
+				helper = new PersonDatabaseHelper(objectClass, table, context);
+				openHelpers.put(className, helper);
+			} else {
+				throw new IllegalArgumentException(className
+					+ " is not a valid Persistable class.");
+			}
+		}
+
+		return helper;
+	}
+
+	/**
+	* DOCUMENT ME!
+	*
+	* @param object DOCUMENT ME!
+	*
+	* @return DOCUMENT ME!
+	*/
+	protected SQLiteOpenHelper getSQLiteOpenHelper(Object object) {
+		return getSQLiteOpenHelper(object.getClass());
+	}
+
+	/**
+	* DOCUMENT ME!
+	*
+	* @param object DOCUMENT ME!
+	*
+	* @return DOCUMENT ME!
+	*
+	* @throws FloggyException DOCUMENT ME!
 	*/
 	protected ContentValues getValues(Object object) throws FloggyException {
 		ContentValues values = new ContentValues();
@@ -326,92 +408,47 @@ public class PersistableManagerAndroid extends PersistableManager {
 		for (Field field : fields) {
 			try {
 				int modifier = field.getModifiers();
-				
+
 				if (!(Modifier.isStatic(modifier) || Modifier.isTransient(modifier))) {
-					
 					String fieldName = field.getName();
 					Class fieldType = field.getType();
 
 					Object value = Utils.getProperty(object, fieldName);
 
 					System.out.println(value);
-					
-					if (fieldType.equals(boolean.class) || fieldType.equals(Boolean.class)) {
-						values.put(field.getName(), (Boolean)value);
-					} else if (fieldType.equals(byte.class) || fieldType.equals(Byte.class)) {
-						values.put(field.getName(), (Byte)value);
-					} else if (fieldType.equals(double.class) || fieldType.equals(Double.class)) {
-						values.put(field.getName(), (Double)value);
-					} else if (fieldType.equals(float.class) || fieldType.equals(Float.class)) {
-						values.put(field.getName(), (Float)value);
-					} else if (fieldType.equals(int.class) || fieldType.equals(Integer.class)) {
-						values.put(field.getName(), (Integer)value);
-					} else if (fieldType.equals(long.class) || fieldType.equals(Long.class)) {
-						values.put(field.getName(), (Long)value);
-					} else if (fieldType.equals(short.class) || fieldType.equals(Short.class)) {
-						values.put(field.getName(), (Short)value);
-					} else if (fieldType.equals(String.class)) {
-						values.put(field.getName(), (String)value);
-					}
-					
-				}
-				
 
+					if (fieldType.equals(boolean.class)
+						 || fieldType.equals(Boolean.class)) {
+						values.put(field.getName(), (Boolean) value);
+					} else if (fieldType.equals(byte.class)
+						 || fieldType.equals(Byte.class)) {
+						values.put(field.getName(), (Byte) value);
+					} else if (fieldType.equals(double.class)
+						 || fieldType.equals(Double.class)) {
+						values.put(field.getName(), (Double) value);
+					} else if (fieldType.equals(float.class)
+						 || fieldType.equals(Float.class)) {
+						values.put(field.getName(), (Float) value);
+					} else if (fieldType.equals(int.class)
+						 || fieldType.equals(Integer.class)) {
+						values.put(field.getName(), (Integer) value);
+					} else if (fieldType.equals(long.class)
+						 || fieldType.equals(Long.class)) {
+						values.put(field.getName(), (Long) value);
+					} else if (fieldType.equals(short.class)
+						 || fieldType.equals(Short.class)) {
+						values.put(field.getName(), (Short) value);
+					} else if (fieldType.equals(String.class)) {
+						values.put(field.getName(), (String) value);
+					}
+				}
 			} catch (Exception ex) {
 				throw Utils.handleException(ex);
 			}
 		}
+
 		System.out.println(values.toString());
 
 		return values;
 	}
-	
-	/**
-	 * DOCUMENT ME!
-	*
-	* @param cursor DOCUMENT ME!
-	*/
-	public static void setValues(Cursor cursor, Object object) throws FloggyException {
-		
-		Field[] fields = object.getClass().getDeclaredFields();
-
-		for (Field field : fields) {
-			try {
-				int modifier = field.getModifiers();
-				
-				if (!(Modifier.isStatic(modifier) || Modifier.isTransient(modifier))) {
-					
-					String fieldName = field.getName();
-					Class fieldType = field.getType();
-
-					int columnIndex = cursor.getColumnIndex(fieldName);
-					
-					if (fieldType.equals(boolean.class) || fieldType.equals(Boolean.class)) {
-						//Utils.setProperty(object, fieldName, cursor.get)
-					} else if (fieldType.equals(byte.class) || fieldType.equals(Byte.class)) {
-						//Utils.setProperty(object, fieldName, cursor.get)
-					} else if (fieldType.equals(double.class) || fieldType.equals(Double.class)) {
-						Utils.setProperty(object, fieldName, fieldType, cursor.getDouble(columnIndex));
-					} else if (fieldType.equals(float.class) || fieldType.equals(Float.class)) {
-						Utils.setProperty(object, fieldName, fieldType, cursor.getFloat(columnIndex));
-					} else if (fieldType.equals(int.class) || fieldType.equals(Integer.class)) {
-						Utils.setProperty(object, fieldName, fieldType, cursor.getInt(columnIndex));
-					} else if (fieldType.equals(long.class) || fieldType.equals(Long.class)) {
-						Utils.setProperty(object, fieldName, fieldType, cursor.getLong(columnIndex));
-					} else if (fieldType.equals(short.class) || fieldType.equals(Short.class)) {
-						Utils.setProperty(object, fieldName, fieldType, cursor.getShort(columnIndex));
-					} else if (fieldType.equals(String.class)) {
-						Utils.setProperty(object, fieldName, fieldType, cursor.getString(columnIndex));
-					}
-					
-				}
-				
-
-			} catch (Exception ex) {
-				throw Utils.handleException(ex);
-			}
-		}
-	}
-
-
 }

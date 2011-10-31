@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2010 Floggy Open Source Group. All rights reserved.
+ * Copyright (c) 2006-2011 Floggy Open Source Group. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,20 +21,42 @@ import java.lang.reflect.Method;
 import org.floggy.persistence.android.FloggyException;
 
 /**
- * DOCUMENT ME!
- * 
- * @author <a href="mailto:thiago.moreira@floggy.org">Thiago Moreira</a>
- * @version $Revision$
+* DOCUMENT ME!
+*
+* @author <a href="mailto:thiago.moreira@floggy.org">Thiago Moreira</a>
+* @version $Revision$
  */
 public class Utils {
 	/**
-	 * DOCUMENT ME!
-	 * 
-	 * @param ex
-	 *            DOCUMENT ME!
-	 * 
-	 * @return DOCUMENT ME!
-	 */
+	* DOCUMENT ME!
+	*
+	* @param object DOCUMENT ME!
+	* @param fieldName DOCUMENT ME!
+	*
+	* @return DOCUMENT ME!
+	*
+	* @throws SecurityException DOCUMENT ME!
+	* @throws NoSuchMethodException DOCUMENT ME!
+	* @throws IllegalArgumentException DOCUMENT ME!
+	* @throws IllegalAccessException DOCUMENT ME!
+	* @throws InvocationTargetException DOCUMENT ME!
+	*/
+	public static Object getProperty(Object object, String fieldName)
+		throws SecurityException, NoSuchMethodException, IllegalArgumentException,
+			IllegalAccessException, InvocationTargetException {
+		Method method =
+			object.getClass().getMethod(getGetterMethodName(fieldName), null);
+
+		return method.invoke(object, null);
+	}
+
+	/**
+	* DOCUMENT ME!
+	*
+	* @param ex DOCUMENT ME!
+	*
+	* @return DOCUMENT ME!
+	*/
 	public static FloggyException handleException(Exception ex) {
 		if (ex instanceof FloggyException) {
 			return (FloggyException) ex;
@@ -49,41 +71,67 @@ public class Utils {
 		return new FloggyException(message, ex);
 	}
 
-	public static void setProperty(Object object, String fieldName, Class fieldType, Object value)
-		throws SecurityException, NoSuchMethodException,
-		IllegalArgumentException, IllegalAccessException,
-		InvocationTargetException {
-
-		Method method = object.getClass().getMethod(
-				getSetterMethodName(fieldName), fieldType);
+	/**
+	* DOCUMENT ME!
+	*
+	* @param object DOCUMENT ME!
+	* @param fieldName DOCUMENT ME!
+	* @param fieldType DOCUMENT ME!
+	* @param value DOCUMENT ME!
+	*
+	* @throws SecurityException DOCUMENT ME!
+	* @throws NoSuchMethodException DOCUMENT ME!
+	* @throws IllegalArgumentException DOCUMENT ME!
+	* @throws IllegalAccessException DOCUMENT ME!
+	* @throws InvocationTargetException DOCUMENT ME!
+	*/
+	public static void setProperty(Object object, String fieldName,
+		Class fieldType, Object value)
+		throws SecurityException, NoSuchMethodException, IllegalArgumentException,
+			IllegalAccessException, InvocationTargetException {
+		Method method =
+			object.getClass().getMethod(getSetterMethodName(fieldName), fieldType);
 
 		method.invoke(object, value);
 	}
 
-	public static Object getProperty(Object object, String fieldName)
-			throws SecurityException, NoSuchMethodException,
-			IllegalArgumentException, IllegalAccessException,
-			InvocationTargetException {
-		Method method = object.getClass().getMethod(
-				getGetterMethodName(fieldName), null);
-
-		return method.invoke(object, null);
-	}
-
-	protected static String getGetterMethodName(String fieldName) {
-		fieldName = capitalizeFieldName(fieldName);
-		return "get" + fieldName;
-	}
-
-	protected static String getSetterMethodName(String fieldName) {
-		fieldName = capitalizeFieldName(fieldName);
-		return "set" + fieldName;
-	}
-
+	/**
+	* DOCUMENT ME!
+	*
+	* @param fieldName DOCUMENT ME!
+	*
+	* @return DOCUMENT ME!
+	*/
 	protected static String capitalizeFieldName(String fieldName) {
 		char ch = fieldName.charAt(0);
 		ch = Character.toUpperCase(ch);
+
 		return ch + fieldName.substring(1);
 	}
 
+	/**
+	* DOCUMENT ME!
+	*
+	* @param fieldName DOCUMENT ME!
+	*
+	* @return DOCUMENT ME!
+	*/
+	protected static String getGetterMethodName(String fieldName) {
+		fieldName = capitalizeFieldName(fieldName);
+
+		return "get" + fieldName;
+	}
+
+	/**
+	* DOCUMENT ME!
+	*
+	* @param fieldName DOCUMENT ME!
+	*
+	* @return DOCUMENT ME!
+	*/
+	protected static String getSetterMethodName(String fieldName) {
+		fieldName = capitalizeFieldName(fieldName);
+
+		return "set" + fieldName;
+	}
 }

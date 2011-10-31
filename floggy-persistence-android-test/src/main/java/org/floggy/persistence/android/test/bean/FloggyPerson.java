@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2010 Floggy Open Source Group. All rights reserved.
+ * Copyright (c) 2006-2011 Floggy Open Source Group. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,49 +25,41 @@ import org.floggy.persistence.android.PersistableManager;
 import org.floggy.persistence.android.test.animal.Bird;
 
 /**
- * DOCUMENT ME!
- *
- * @author <a href="mailto:thiago.moreira@floggy.org">Thiago Moreira</a>
- * @version $Revision$
-  */
+* DOCUMENT ME!
+*
+* @author <a href="mailto:thiago.moreira@floggy.org">Thiago Moreira</a>
+* @version $Revision$
+ */
 @Persistable
 public class FloggyPerson implements Deletable {
 	public char sex;
 
-	/**
-	 * DOCUMENT ME!
-	 */
+	/** DOCUMENT ME! */
 	protected Date dataNascimento;
 
-	/**
-	 * DOCUMENT ME!
-	 */
+	/** DOCUMENT ME! */
 	protected String cpf;
 
-	/**
-	 * DOCUMENT ME!
-	 */
+	/** DOCUMENT ME! */
 	protected String nome;
 
-	/**
-	 * DOCUMENT ME!
-	 */
+	/** DOCUMENT ME! */
 	protected transient int idade;
 	private Bird x;
 
-	/**
-	 * Creates a new FloggyPerson object.
-	 */
+/**
+   * Creates a new FloggyPerson object.
+   */
 	public FloggyPerson() {
 	}
 
-	/**
-	 * Creates a new FloggyPerson object.
-	 *
-	 * @param cpf DOCUMENT ME!
-	 * @param nome DOCUMENT ME!
-	 * @param dataNascimento DOCUMENT ME!
-	 */
+/**
+   * Creates a new FloggyPerson object.
+   *
+   * @param cpf DOCUMENT ME!
+   * @param nome DOCUMENT ME!
+   * @param dataNascimento DOCUMENT ME!
+   */
 	public FloggyPerson(String cpf, String nome, Date dataNascimento) {
 		setCpf(cpf);
 		setNome(nome);
@@ -75,7 +67,7 @@ public class FloggyPerson implements Deletable {
 	}
 
 	/**
-	 * DOCUMENT ME!
+	* DOCUMENT ME!
 	*
 	* @throws FloggyException DOCUMENT ME!
 	*/
@@ -86,7 +78,7 @@ public class FloggyPerson implements Deletable {
 	}
 
 	/**
-	 * DOCUMENT ME!
+	* DOCUMENT ME!
 	*
 	* @param obj DOCUMENT ME!
 	*
@@ -132,7 +124,7 @@ public class FloggyPerson implements Deletable {
 	}
 
 	/**
-	 * DOCUMENT ME!
+	* DOCUMENT ME!
 	*
 	* @return DOCUMENT ME!
 	*/
@@ -141,7 +133,7 @@ public class FloggyPerson implements Deletable {
 	}
 
 	/**
-	 * DOCUMENT ME!
+	* DOCUMENT ME!
 	*
 	* @return DOCUMENT ME!
 	*/
@@ -150,7 +142,7 @@ public class FloggyPerson implements Deletable {
 	}
 
 	/**
-	 * DOCUMENT ME!
+	* DOCUMENT ME!
 	*
 	* @return DOCUMENT ME!
 	*/
@@ -159,7 +151,7 @@ public class FloggyPerson implements Deletable {
 	}
 
 	/**
-	 * DOCUMENT ME!
+	* DOCUMENT ME!
 	*
 	* @return DOCUMENT ME!
 	*/
@@ -168,7 +160,7 @@ public class FloggyPerson implements Deletable {
 	}
 
 	/**
-	 * DOCUMENT ME!
+	* DOCUMENT ME!
 	*
 	* @return DOCUMENT ME!
 	*/
@@ -177,7 +169,7 @@ public class FloggyPerson implements Deletable {
 	}
 
 	/**
-	 * DOCUMENT ME!
+	* DOCUMENT ME!
 	*
 	* @return DOCUMENT ME!
 	*/
@@ -194,7 +186,7 @@ public class FloggyPerson implements Deletable {
 	}
 
 	/**
-	 * DOCUMENT ME!
+	* DOCUMENT ME!
 	*
 	* @param cpf DOCUMENT ME!
 	*/
@@ -203,7 +195,7 @@ public class FloggyPerson implements Deletable {
 	}
 
 	/**
-	 * DOCUMENT ME!
+	* DOCUMENT ME!
 	*
 	* @param dataNascimento DOCUMENT ME!
 	*/
@@ -222,7 +214,7 @@ public class FloggyPerson implements Deletable {
 	}
 
 	/**
-	 * DOCUMENT ME!
+	* DOCUMENT ME!
 	*
 	* @param nome DOCUMENT ME!
 	*/
@@ -231,7 +223,7 @@ public class FloggyPerson implements Deletable {
 	}
 
 	/**
-	 * DOCUMENT ME!
+	* DOCUMENT ME!
 	*
 	* @param x DOCUMENT ME!
 	*/

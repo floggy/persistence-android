@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2010 Floggy Open Source Group. All rights reserved.
+ * Copyright (c) 2006-2011 Floggy Open Source Group. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,20 +18,18 @@ package org.floggy.persistence.android.test.primitive;
 import org.floggy.persistence.android.Persistable;
 
 /**
- * DOCUMENT ME!
- *
- * @author <a href="mailto:thiago.moreira@floggy.org">Thiago Moreira</a>
- * @version $Revision$
-  */
+* DOCUMENT ME!
+*
+* @author <a href="mailto:thiago.moreira@floggy.org">Thiago Moreira</a>
+* @version $Revision$
+ */
 @Persistable
-public class FloggyChar  {
-	/**
-	 * DOCUMENT ME!
-	 */
+public class FloggyChar {
+	/** DOCUMENT ME! */
 	protected char x;
 
 	/**
-	 * DOCUMENT ME!
+	* DOCUMENT ME!
 	*
 	* @return DOCUMENT ME!
 	*/
@@ -40,7 +38,7 @@ public class FloggyChar  {
 	}
 
 	/**
-	 * DOCUMENT ME!
+	* DOCUMENT ME!
 	*
 	* @param x DOCUMENT ME!
 	*/

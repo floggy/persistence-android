@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2010 Floggy Open Source Group. All rights reserved.
+ * Copyright (c) 2006-2011 Floggy Open Source Group. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.floggy.persistence.android.core.impl;
 
 import org.floggy.persistence.android.FloggyException;
@@ -22,35 +21,31 @@ import org.floggy.persistence.android.ObjectSet;
 import android.database.Cursor;
 
 /**
- * DOCUMENT ME!
- *
- * @author <a href="mailto:thiago.moreira@floggy.org">Thiago Moreira</a>
- * @version $Revision$
-  */
+* DOCUMENT ME!
+*
+* @author <a href="mailto:thiago.moreira@floggy.org">Thiago Moreira</a>
+* @version $Revision$
+ */
 public class ObjectSetImpl implements ObjectSet {
-	/**
-	 * DOCUMENT ME!
-	 */
+	/** DOCUMENT ME! */
 	protected Class persistableClass;
 
-	/**
-	 * DOCUMENT ME!
-	 */
+	/** DOCUMENT ME! */
 	protected Cursor cursor;
 
-	/**
-	 * Creates a new ObjectSetImpl object.
-	 *
-	 * @param persistableClass DOCUMENT ME!
-	 * @param cursor DOCUMENT ME!
-	 */
+/**
+   * Creates a new ObjectSetImpl object.
+   *
+   * @param persistableClass DOCUMENT ME!
+   * @param cursor DOCUMENT ME!
+   */
 	public ObjectSetImpl(Class persistableClass, Cursor cursor) {
 		this.persistableClass = persistableClass;
 		this.cursor = cursor;
 	}
 
 	/**
-	 * DOCUMENT ME!
+	* DOCUMENT ME!
 	*
 	* @param index DOCUMENT ME!
 	*
@@ -76,7 +71,7 @@ public class ObjectSetImpl implements ObjectSet {
 	}
 
 	/**
-	 * DOCUMENT ME!
+	* DOCUMENT ME!
 	*
 	* @return DOCUMENT ME!
 	*/
@@ -85,7 +80,7 @@ public class ObjectSetImpl implements ObjectSet {
 	}
 
 	/**
-	 * DOCUMENT ME!
+	* DOCUMENT ME!
 	*
 	* @param lazy DOCUMENT ME!
 	*/
@@ -93,7 +88,7 @@ public class ObjectSetImpl implements ObjectSet {
 	}
 
 	/**
-	 * DOCUMENT ME!
+	* DOCUMENT ME!
 	*
 	* @return DOCUMENT ME!
 	*/

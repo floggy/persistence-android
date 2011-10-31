@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2010 Floggy Open Source Group. All rights reserved.
+ * Copyright (c) 2006-2011 Floggy Open Source Group. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,17 +24,17 @@ import org.floggy.persistence.android.Persistable;
 import org.floggy.persistence.android.PersistableManager;
 
 /**
- * DOCUMENT ME!
- *
- * @author <a href="mailto:thiago.moreira@floggy.org">Thiago Moreira</a>
- * @version $Revision$
-  */
+* DOCUMENT ME!
+*
+* @author <a href="mailto:thiago.moreira@floggy.org">Thiago Moreira</a>
+* @version $Revision$
+ */
 @Persistable
 public class FloggyVectorArray implements Deletable {
 	private Vector[] x;
 
 	/**
-	 * DOCUMENT ME!
+	* DOCUMENT ME!
 	*
 	* @throws FloggyException DOCUMENT ME!
 	*/
@@ -57,7 +57,7 @@ public class FloggyVectorArray implements Deletable {
 	}
 
 	/**
-	 * DOCUMENT ME!
+	* DOCUMENT ME!
 	*
 	* @return DOCUMENT ME!
 	*/
@@ -66,7 +66,7 @@ public class FloggyVectorArray implements Deletable {
 	}
 
 	/**
-	 * DOCUMENT ME!
+	* DOCUMENT ME!
 	*
 	* @param x DOCUMENT ME!
 	*/

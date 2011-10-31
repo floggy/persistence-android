@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2010 Floggy Open Source Group. All rights reserved.
+ * Copyright (c) 2006-2011 Floggy Open Source Group. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,30 +30,22 @@ import android.widget.Button;
 import android.widget.EditText;
 
 /**
- * DOCUMENT ME!
- *
- * @author <a href="mailto:thiago.moreira@floggy.org">Thiago Moreira</a>
- * @version $Revision$
-  */
+* DOCUMENT ME!
+*
+* @author <a href="mailto:thiago.moreira@floggy.org">Thiago Moreira</a>
+* @version $Revision$
+ */
 public class HelloFloggy extends Activity {
-	/**
-	 * DOCUMENT ME!
-	 */
+	/** DOCUMENT ME! */
 	protected Button submitButton;
 
-	/**
-	 * DOCUMENT ME!
-	 */
+	/** DOCUMENT ME! */
 	protected EditText ageEditText;
 
-	/**
-	 * DOCUMENT ME!
-	 */
+	/** DOCUMENT ME! */
 	protected EditText nameEditText;
 
-	/**
-	 * DOCUMENT ME!
-	 */
+	/** DOCUMENT ME! */
 	protected PersistableManager manager;
 
 	/**
@@ -85,13 +77,11 @@ public class HelloFloggy extends Activity {
 						manager.load(person, id, false);
 
 						Log.v(ACTIVITY_SERVICE, String.valueOf(person));
-						
+
 						manager.save(new Agent());
 					} catch (Exception e) {
 						Log.e(ACTIVITY_SERVICE, e.getMessage(), e);
 					}
-					
-					
 
 					try {
 						ObjectSet os = manager.find(Person.class, null, null);
@@ -103,7 +93,9 @@ public class HelloFloggy extends Activity {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
+
 					System.out.println();
+
 					try {
 						ObjectSet os = manager.find(Agent.class, null, null);
 						int size = os.size();
@@ -114,7 +106,7 @@ public class HelloFloggy extends Activity {
 					} catch (Exception e) {
 						Log.e(ACTIVITY_SERVICE, e.getMessage(), e);
 					}
-}
+				}
 			});
 
 		manager = PersistableManager.getInstance(this);
