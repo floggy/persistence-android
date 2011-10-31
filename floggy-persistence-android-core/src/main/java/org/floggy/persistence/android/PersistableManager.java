@@ -39,6 +39,9 @@ public abstract class PersistableManager {
 	* @return The current instance of PersistableManager.
 	*/
 	public static PersistableManager getInstance(Context context) {
+		if (context == null) {
+			throw new IllegalArgumentException("Context cannot be null");
+		}
 		if (instance == null) {
 			instance = new PersistableManagerAndroid(context);
 		}
