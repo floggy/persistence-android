@@ -15,8 +15,11 @@
  */
 package org.floggy.persistence.android;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.floggy.persistence.android.core.impl.DatabaseHelper;
 import org.floggy.persistence.android.core.impl.ObjectSetImpl;
@@ -26,6 +29,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 /**
 * This is the main class of the framework. All persistence operations
@@ -60,8 +64,27 @@ public class PersistableManager {
 
 	/** DOCUMENT ME! */
 	protected DatabaseHelper databaseHelper;
+	protected Set<String> tables = new HashSet<String>();
+
 	private PersistableManager(Context context) {
 		this.databaseHelper = new DatabaseHelper("Floggy", context);
+		this.init();
+	}
+
+	protected void init() {
+		String sql = "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;";
+
+		SQLiteDatabase database = databaseHelper.getReadableDatabase();
+
+		Cursor cursor = database.rawQuery(sql, null);
+
+		while (cursor.moveToNext()) {
+			tables.add(cursor.getString(0));
+		}
+
+		cursor.close();
+
+		Log.v(Context.ACTIVITY_SERVICE, String.valueOf(tables));
 	}
 
 	/**
@@ -70,58 +93,68 @@ public class PersistableManager {
 	* @param objectClass DOCUMENT ME!
 	* @param database DOCUMENT ME!
 	*/
-	protected void createTable(Class objectClass, SQLiteDatabase database) {
-		StringBuilder builder = new StringBuilder();
+	protected void createTable(Class objectClass, SQLiteDatabase database) throws Exception {
+		Persistable annotation = (Persistable)objectClass.getAnnotation(Persistable.class);
 
-		builder.append("create table ");
-		builder.append(objectClass.getSimpleName());
-		builder.append(" (_id integer primary key autoincrement");
+		if (annotation != null) {
+			String tableName = annotation.table();
+			if ("".equals(tableName)) {
+				tableName = objectClass.getSimpleName();
+			}
+			if (!tables.contains(tableName)) {
+				StringBuilder builder = new StringBuilder();
 
-		Field[] fields = objectClass.getDeclaredFields();
+				builder.append("create table ");
+				builder.append(tableName);
+				builder.append(" (_id integer primary key autoincrement");
 
-		for (Field field : fields) {
-			try {
-				int modifier = field.getModifiers();
+				Field[] fields = objectClass.getDeclaredFields();
 
-				if (!(Modifier.isStatic(modifier) || Modifier.isTransient(modifier))) {
-					builder.append(", ");
+				for (Field field : fields) {
+					int modifier = field.getModifiers();
 
-					String fieldName = field.getName();
-					Class fieldType = field.getType();
+					if (!(Modifier.isStatic(modifier) || Modifier.isTransient(modifier))) {
+						builder.append(", ");
 
-					if (fieldType.equals(boolean.class)
-						 || fieldType.equals(Boolean.class)) {
-					} else if (fieldType.equals(byte.class)
-						 || fieldType.equals(Byte.class)) {
-					} else if (fieldType.equals(double.class)
-						 || fieldType.equals(Double.class)) {
-					} else if (fieldType.equals(float.class)
-						 || fieldType.equals(Float.class)) {
-					} else if (fieldType.equals(int.class)
-						 || fieldType.equals(Integer.class)) {
-						builder.append(fieldName);
-						builder.append(" integer");
-					} else if (fieldType.equals(long.class)
-						 || fieldType.equals(Long.class)) {
-						builder.append(fieldName);
-						builder.append(" long");
-					} else if (fieldType.equals(short.class)
-						 || fieldType.equals(Short.class)) {
-					} else if (fieldType.equals(String.class)) {
-						builder.append(fieldName);
-						builder.append(" text");
+						String fieldName = field.getName();
+						Class fieldType = field.getType();
+
+						if (fieldType.equals(boolean.class)
+							 || fieldType.equals(Boolean.class)) {
+						} else if (fieldType.equals(byte.class)
+							 || fieldType.equals(Byte.class)) {
+						} else if (fieldType.equals(double.class)
+							 || fieldType.equals(Double.class)) {
+						} else if (fieldType.equals(float.class)
+							 || fieldType.equals(Float.class)) {
+						} else if (fieldType.equals(int.class)
+							 || fieldType.equals(Integer.class)) {
+							builder.append(fieldName);
+							builder.append(" integer");
+						} else if (fieldType.equals(long.class)
+							 || fieldType.equals(Long.class)) {
+							builder.append(fieldName);
+							builder.append(" long");
+						} else if (fieldType.equals(short.class)
+							 || fieldType.equals(Short.class)) {
+						} else if (fieldType.equals(String.class)) {
+							builder.append(fieldName);
+							builder.append(" text");
+						}
 					}
 				}
-			} catch (Exception ex) {
-				ex.printStackTrace();
+
+				builder.append(")");
+
+				Log.v(Context.ACTIVITY_SERVICE, builder.toString());
+
+				database.execSQL(builder.toString());
+
+				tables.add(tableName);
 			}
+		} else {
+			throw new IllegalArgumentException(objectClass + " is not a valid Persistable class.");
 		}
-
-		builder.append(")");
-
-		System.out.println(builder);
-
-		database.execSQL(builder.toString());
 	}
 
 	/**
