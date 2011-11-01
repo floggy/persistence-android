@@ -39,6 +39,23 @@ public class PersistableManagerTest extends AndroidTestCase {
 	/**
 	* DOCUMENT ME!
 	*/
+	public void testGetInstanceNotNullContextSameInstance() {
+		PersistableManager manager = PersistableManager.getInstance(getContext());
+
+		assertNotNull(manager);
+		assertEquals(PersistableManager.class, manager.getClass());
+
+		PersistableManager manager2 = PersistableManager.getInstance(getContext());
+
+		assertNotNull(manager2);
+		assertEquals(PersistableManager.class, manager2.getClass());
+
+		assertSame(manager, manager2);
+	}
+
+	/**
+	* DOCUMENT ME!
+	*/
 	public void testGetInstanceNullContext() {
 		try {
 			PersistableManager.getInstance(null);
@@ -47,4 +64,5 @@ public class PersistableManagerTest extends AndroidTestCase {
 			assertEquals(IllegalArgumentException.class, ex.getClass());
 		}
 	}
+
 }
