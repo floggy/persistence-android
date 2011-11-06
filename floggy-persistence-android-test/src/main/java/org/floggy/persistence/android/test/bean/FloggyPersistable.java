@@ -38,7 +38,7 @@ public class FloggyPersistable implements Deletable {
 	*/
 	public void delete() throws FloggyException {
 		if (x != null) {
-			PersistableManager.getInstance(null).delete(x);
+//			PersistableManager.getInstance(null).delete(x);
 		}
 	}
 

@@ -49,7 +49,7 @@ public class FloggyStackArray implements Deletable {
 						Object object = (Object) enumeration.nextElement();
 
 						if (object instanceof Persistable) {
-							PersistableManager.getInstance(null).delete((Persistable) object);
+//							PersistableManager.getInstance(null).delete((Persistable) object);
 						}
 					}
 				}

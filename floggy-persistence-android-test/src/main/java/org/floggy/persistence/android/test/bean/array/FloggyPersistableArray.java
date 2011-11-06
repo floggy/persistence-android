@@ -41,7 +41,7 @@ public class FloggyPersistableArray implements Deletable {
 		if (x != null) {
 			for (int i = 0; i < x.length; i++) {
 				if (x[i] != null) {
-					PersistableManager.getInstance(null).delete(x[i]);
+//					PersistableManager.getInstance(null).delete(x[i]);
 				}
 			}
 		}
