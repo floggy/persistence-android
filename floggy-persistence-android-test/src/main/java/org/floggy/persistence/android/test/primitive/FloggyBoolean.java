@@ -15,6 +15,7 @@
  */
 package org.floggy.persistence.android.test.primitive;
 
+import org.floggy.persistence.android.Field;
 import org.floggy.persistence.android.Persistable;
 
 /**
@@ -28,6 +29,36 @@ public class FloggyBoolean {
 	/** DOCUMENT ME! */
 	protected boolean x;
 
+	/** DOCUMENT ME! */
+	@Field(id = true)
+	protected long id = -1;
+
+	/**
+	* DOCUMENT ME!
+	*
+	* @param obj DOCUMENT ME!
+	*
+	* @return DOCUMENT ME!
+	*/
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+
+		if (obj == null)
+			return false;
+
+		if (getClass() != obj.getClass())
+			return false;
+
+		FloggyBoolean other = (FloggyBoolean) obj;
+
+		if (x != other.x)
+			return false;
+
+		return true;
+	}
+
 	/**
 	* DOCUMENT ME!
 	*
@@ -40,9 +71,33 @@ public class FloggyBoolean {
 	/**
 	* DOCUMENT ME!
 	*
+	* @return DOCUMENT ME!
+	*/
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = (prime * result) + (x ? 1231 : 1237);
+
+		return result;
+	}
+
+	/**
+	* DOCUMENT ME!
+	*
 	* @param x DOCUMENT ME!
 	*/
 	public void setX(boolean x) {
 		this.x = x;
+	}
+
+	/**
+	* DOCUMENT ME!
+	*
+	* @return DOCUMENT ME!
+	*/
+	@Override
+	public String toString() {
+		return "FloggyBoolean [x=" + x + ", id=" + id + "]";
 	}
 }

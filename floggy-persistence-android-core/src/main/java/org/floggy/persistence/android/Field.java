@@ -13,28 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.floggy.persistence.android.test;
+package org.floggy.persistence.android;
 
-import org.floggy.persistence.android.PersistableManager;
-
-import android.test.AndroidTestCase;
-
-/**
-* DOCUMENT ME!
-*
-* @author <a href="mailto:thiago.moreira@floggy.org">Thiago Moreira</a>
-* @version $Revision$
- */
-public abstract class FloggyBaseTest extends AndroidTestCase {
-	/** DOCUMENT ME! */
-	protected PersistableManager manager;
-
-	/**
-	* DOCUMENT ME!
-	*/
-	public void setUp() {
-		if (manager == null) {
-			manager = PersistableManager.getInstance(getContext());
-		}
-	}
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface Field {String columnName() default "";
+	boolean id() default false;
 }

@@ -64,5 +64,4 @@ public class PersistableManagerTest extends AndroidTestCase {
 			assertEquals(IllegalArgumentException.class, ex.getClass());
 		}
 	}
-
 }

@@ -15,10 +15,17 @@
  */
 package org.floggy.persistence.android.core.impl;
 
+import java.lang.reflect.Field;
+
+import java.util.Arrays;
+
 import org.floggy.persistence.android.FloggyException;
 import org.floggy.persistence.android.ObjectSet;
 
 import android.database.Cursor;
+import android.database.DatabaseUtils;
+
+import android.database.sqlite.SQLiteDatabase;
 
 /**
 * DOCUMENT ME!
@@ -54,7 +61,7 @@ public class ObjectSetImpl implements ObjectSet {
 	* @throws FloggyException DOCUMENT ME!
 	*/
 	public Object get(int index) throws FloggyException {
-		if (cursor.moveToNext()) {
+		if (cursor.moveToPosition(index)) {
 			Object persistable = null;
 
 			try {
@@ -67,6 +74,31 @@ public class ObjectSetImpl implements ObjectSet {
 			return persistable;
 		} else {
 			throw new FloggyException("Invalid index");
+		}
+	}
+
+	/**
+	* DOCUMENT ME!
+	*
+	* @param index DOCUMENT ME!
+	*
+	* @return DOCUMENT ME!
+	*
+	* @throws FloggyException DOCUMENT ME!
+	* @throws IllegalArgumentException DOCUMENT ME!
+	*/
+	public long getId(int index) throws FloggyException {
+		Field field = Utils.getIDField(persistableClass);
+
+		if (field != null) {
+			if (cursor.moveToPosition(index)) {
+				return cursor.getLong(cursor.getColumnIndex(field.getName()));
+			} else {
+				throw new FloggyException("Invalid index");
+			}
+		} else {
+			throw new IllegalArgumentException(
+				"You cannot use this method to delete a non IDable class");
 		}
 	}
 

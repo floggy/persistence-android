@@ -56,6 +56,18 @@ public interface ObjectSet {
 	Object get(int index) throws FloggyException;
 
 	/**
+	* Load the object of a given index into the object instance supplied.
+	*
+	* @param index Index of the object to be loaded.
+	*
+	* @return The id number at SQLite database at the specified position in the
+	* 				set.
+	*
+	* @throws FloggyException Exception thrown if a persistance error occurs.
+	*/
+	long getId(int index) throws FloggyException;
+
+	/**
 	* Gets the lazy property.
 	*
 	* @return The flag indicating the the type of fetch made by  the

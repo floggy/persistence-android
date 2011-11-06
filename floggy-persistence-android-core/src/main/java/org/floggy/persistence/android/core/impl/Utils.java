@@ -24,6 +24,8 @@ import org.floggy.persistence.android.FloggyException;
 
 import android.database.Cursor;
 
+import android.util.Log;
+
 /**
 * DOCUMENT ME!
 *
@@ -31,6 +33,43 @@ import android.database.Cursor;
 * @version $Revision$
  */
 public class Utils {
+	private static final String TAG = "floggy.Utils";
+
+	/**
+	* DOCUMENT ME!
+	*
+	* @param objectClass DOCUMENT ME!
+	*
+	* @return DOCUMENT ME!
+	*
+	* @throws IllegalArgumentException DOCUMENT ME!
+	*/
+	public static Field getIDField(Class objectClass) {
+		if (objectClass == null) {
+			throw new IllegalArgumentException("The class object cannot be null!");
+		}
+
+		Log.v(TAG, objectClass.getName());
+
+		Field[] fields = objectClass.getDeclaredFields();
+
+		Log.v(TAG, "Amount of fields: " + fields.length);
+
+		for (Field field : fields) {
+			org.floggy.persistence.android.Field fieldAnnotation =
+				field.getAnnotation(org.floggy.persistence.android.Field.class);
+			Log.v(TAG, fieldAnnotation.toString());
+
+			if ((fieldAnnotation != null) && fieldAnnotation.id()) {
+				field.setAccessible(true);
+
+				return field;
+			}
+		}
+
+		return null;
+	}
+
 	/**
 	* DOCUMENT ME!
 	*
@@ -88,6 +127,7 @@ public class Utils {
 	* @throws IllegalArgumentException DOCUMENT ME!
 	* @throws IllegalAccessException DOCUMENT ME!
 	* @throws InvocationTargetException DOCUMENT ME!
+	* @throws IllegalStateException DOCUMENT ME!
 	*/
 	public static void setProperty(Object object, String fieldName,
 		Class fieldType, Object value)
@@ -96,7 +136,83 @@ public class Utils {
 		Method method =
 			object.getClass().getMethod(getSetterMethodName(fieldName), fieldType);
 
+		if (fieldType.equals(boolean.class) || fieldType.equals(Boolean.class)) {
+			Integer temp = (Integer) value;
+
+			if (temp.intValue() == 0) {
+				value = Boolean.FALSE;
+			} else if (temp.intValue() == 1) {
+				value = Boolean.TRUE;
+			} else {
+				throw new IllegalStateException();
+			}
+		}
+
+		System.out.println(fieldName + " " + fieldType + " " + value);
 		method.invoke(object, value);
+	}
+
+	/**
+	* DOCUMENT ME!
+	*
+	* @param cursor DOCUMENT ME!
+	* @param object DOCUMENT ME!
+	*
+	* @throws FloggyException DOCUMENT ME!
+	*/
+	public static void setValues(Cursor cursor, Object object)
+		throws FloggyException {
+		Field[] fields = object.getClass().getDeclaredFields();
+
+		for (Field field : fields) {
+			try {
+				int modifier = field.getModifiers();
+
+				if (!(Modifier.isStatic(modifier) || Modifier.isTransient(modifier))) {
+					String fieldName = field.getName();
+					Class fieldType = field.getType();
+
+					try {
+						int columnIndex = cursor.getColumnIndex(fieldName);
+
+						if (fieldType.equals(boolean.class)
+							 || fieldType.equals(Boolean.class)) {
+							Utils.setProperty(object, fieldName, fieldType,
+								cursor.getInt(columnIndex));
+						} else if (fieldType.equals(byte.class)
+							 || fieldType.equals(Byte.class)) {
+						} else if (fieldType.equals(double.class)
+							 || fieldType.equals(Double.class)) {
+							Utils.setProperty(object, fieldName, fieldType,
+								cursor.getDouble(columnIndex));
+						} else if (fieldType.equals(float.class)
+							 || fieldType.equals(Float.class)) {
+							Utils.setProperty(object, fieldName, fieldType,
+								cursor.getFloat(columnIndex));
+						} else if (fieldType.equals(int.class)
+							 || fieldType.equals(Integer.class)) {
+							Utils.setProperty(object, fieldName, fieldType,
+								cursor.getInt(columnIndex));
+						} else if (fieldType.equals(long.class)
+							 || fieldType.equals(Long.class)) {
+							Utils.setProperty(object, fieldName, fieldType,
+								cursor.getLong(columnIndex));
+						} else if (fieldType.equals(short.class)
+							 || fieldType.equals(Short.class)) {
+							Utils.setProperty(object, fieldName, fieldType,
+								cursor.getShort(columnIndex));
+						} else if (fieldType.equals(String.class)) {
+							Utils.setProperty(object, fieldName, fieldType,
+								cursor.getString(columnIndex));
+						}
+					} catch (NoSuchMethodException nsmex) {
+						continue;
+					}
+				}
+			} catch (Exception ex) {
+				throw Utils.handleException(ex);
+			}
+		}
 	}
 
 	/**
@@ -138,62 +254,4 @@ public class Utils {
 
 		return "set" + fieldName;
 	}
-
-	/**
-	* DOCUMENT ME!
-	*
-	* @param cursor DOCUMENT ME!
-	* @param object DOCUMENT ME!
-	*
-	* @throws FloggyException DOCUMENT ME!
-	*/
-	public static void setValues(Cursor cursor, Object object)
-		throws FloggyException {
-		Field[] fields = object.getClass().getDeclaredFields();
-
-		for (Field field : fields) {
-			try {
-				int modifier = field.getModifiers();
-
-				if (!(Modifier.isStatic(modifier) || Modifier.isTransient(modifier))) {
-					String fieldName = field.getName();
-					Class fieldType = field.getType();
-
-					int columnIndex = cursor.getColumnIndex(fieldName);
-
-					if (fieldType.equals(boolean.class)
-						 || fieldType.equals(Boolean.class)) {
-					} else if (fieldType.equals(byte.class)
-						 || fieldType.equals(Byte.class)) {
-					} else if (fieldType.equals(double.class)
-						 || fieldType.equals(Double.class)) {
-						Utils.setProperty(object, fieldName, fieldType,
-							cursor.getDouble(columnIndex));
-					} else if (fieldType.equals(float.class)
-						 || fieldType.equals(Float.class)) {
-						Utils.setProperty(object, fieldName, fieldType,
-							cursor.getFloat(columnIndex));
-					} else if (fieldType.equals(int.class)
-						 || fieldType.equals(Integer.class)) {
-						Utils.setProperty(object, fieldName, fieldType,
-							cursor.getInt(columnIndex));
-					} else if (fieldType.equals(long.class)
-						 || fieldType.equals(Long.class)) {
-						Utils.setProperty(object, fieldName, fieldType,
-							cursor.getLong(columnIndex));
-					} else if (fieldType.equals(short.class)
-						 || fieldType.equals(Short.class)) {
-						Utils.setProperty(object, fieldName, fieldType,
-							cursor.getShort(columnIndex));
-					} else if (fieldType.equals(String.class)) {
-						Utils.setProperty(object, fieldName, fieldType,
-							cursor.getString(columnIndex));
-					}
-				}
-			} catch (Exception ex) {
-				throw Utils.handleException(ex);
-			}
-		}
-	}
-
 }

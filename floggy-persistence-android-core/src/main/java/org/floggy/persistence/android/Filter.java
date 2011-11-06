@@ -36,5 +36,5 @@ public interface Filter {
 	*
 	* @return True if the candidate object matches the implemented criterion.
 	*/
-	boolean matches(Persistable o);
+	boolean matches(Object o);
 }
