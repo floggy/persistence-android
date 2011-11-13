@@ -15,6 +15,7 @@
  */
 package org.floggy.persistence.android.test.primitive;
 
+import org.floggy.persistence.android.Field;
 import org.floggy.persistence.android.Persistable;
 
 /**
@@ -27,6 +28,10 @@ import org.floggy.persistence.android.Persistable;
 public class FloggyByte {
 	/** DOCUMENT ME! */
 	protected byte x;
+
+	/** DOCUMENT ME! */
+	@Field(id = true)
+	protected long id = -1;
 
 	/**
 	* DOCUMENT ME!

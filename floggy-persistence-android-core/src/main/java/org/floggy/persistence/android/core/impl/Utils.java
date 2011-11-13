@@ -146,9 +146,13 @@ public class Utils {
 			} else {
 				throw new IllegalStateException();
 			}
+		} else if (fieldType.equals(byte.class) || fieldType.equals(Byte.class)) {
+			Integer temp = (Integer) value;
+
+			value = new Byte(temp.byteValue());
 		}
 
-		System.out.println(fieldName + " " + fieldType + " " + value);
+		Log.v(TAG, fieldName + " " + fieldType + " " + value);
 		method.invoke(object, value);
 	}
 
@@ -181,6 +185,8 @@ public class Utils {
 								cursor.getInt(columnIndex));
 						} else if (fieldType.equals(byte.class)
 							 || fieldType.equals(Byte.class)) {
+							Utils.setProperty(object, fieldName, fieldType,
+									cursor.getInt(columnIndex));
 						} else if (fieldType.equals(double.class)
 							 || fieldType.equals(Double.class)) {
 							Utils.setProperty(object, fieldName, fieldType,
