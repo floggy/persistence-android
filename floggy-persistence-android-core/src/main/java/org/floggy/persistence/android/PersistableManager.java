@@ -88,7 +88,7 @@ public class PersistableManager {
 	* 				the object.
 	*/
 	public int delete(Class objectClass, long id) throws FloggyException {
-		String tableName = getTableName(objectClass);
+		String tableName = Utils.getTableName(objectClass);
 
 		SQLiteDatabase database = databaseHelper.getWritableDatabase();
 
@@ -109,7 +109,7 @@ public class PersistableManager {
 	* @throws IllegalArgumentException DOCUMENT ME!
 	*/
 	public int delete(Object object) throws FloggyException {
-		String tableName = getTableName(object.getClass());
+		String tableName = Utils.getTableName(object.getClass());
 		Field field = Utils.getIdField(object.getClass());
 
 		if (field != null) {
@@ -151,7 +151,7 @@ public class PersistableManager {
 	* 				the objects.
 	*/
 	public int deleteAll(Class objectClass) throws FloggyException {
-		String tableName = getTableName(objectClass);
+		String tableName = Utils.getTableName(objectClass);
 
 		SQLiteDatabase database = databaseHelper.getWritableDatabase();
 
@@ -202,7 +202,7 @@ public class PersistableManager {
 	*/
 	public ObjectSet find(Class objectClass, Filter filter,
 		Comparator comparator, boolean lazy) throws FloggyException {
-		String tableName = getTableName(objectClass);
+		String tableName = Utils.getTableName(objectClass);
 
 		SQLiteDatabase database = databaseHelper.getReadableDatabase();
 
@@ -295,7 +295,7 @@ public class PersistableManager {
 				"The persistable object cannot be null!");
 		}
 
-		String tableName = getTableName(object.getClass());
+		String tableName = Utils.getTableName(object.getClass());
 
 		SQLiteDatabase database = databaseHelper.getReadableDatabase();
 
@@ -419,7 +419,7 @@ public class PersistableManager {
 	*/
 	protected void createTable(Class objectClass, SQLiteDatabase database)
 		throws Exception {
-		String tableName = getTableName(objectClass);
+		String tableName = Utils.getTableName(objectClass);
 
 		if (!tables.contains(tableName)) {
 			StringBuilder builder = new StringBuilder();
@@ -478,39 +478,6 @@ public class PersistableManager {
 
 			tables.add(tableName);
 		}
-	}
-
-	/**
-	* DOCUMENT ME!
-	*
-	* @param objectClass DOCUMENT ME!
-	*
-	* @return DOCUMENT ME!
-	*
-	* @throws IllegalArgumentException DOCUMENT ME!
-	*/
-	protected String getTableName(Class objectClass) {
-		if (objectClass == null) {
-			throw new IllegalArgumentException("The class object cannot be null!");
-		}
-
-		Persistable annotation =
-			(Persistable) objectClass.getAnnotation(Persistable.class);
-
-		String tableName;
-
-		if (annotation != null) {
-			tableName = annotation.table();
-
-			if ("".equals(tableName)) {
-				tableName = objectClass.getSimpleName();
-			}
-		} else {
-			throw new IllegalArgumentException(objectClass
-				+ " is not a valid Persistable class.");
-		}
-
-		return tableName;
 	}
 
 	/**

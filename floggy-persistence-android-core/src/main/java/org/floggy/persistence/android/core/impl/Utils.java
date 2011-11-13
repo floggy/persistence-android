@@ -22,6 +22,7 @@ import java.lang.reflect.Modifier;
 
 import org.floggy.persistence.android.FloggyException;
 import org.floggy.persistence.android.Log;
+import org.floggy.persistence.android.Persistable;
 
 import android.content.ContentValues;
 
@@ -104,6 +105,39 @@ public class Utils {
 			object.getClass().getMethod(getGetterMethodName(fieldName), null);
 
 		return method.invoke(object, null);
+	}
+
+	/**
+	* DOCUMENT ME!
+	*
+	* @param objectClass DOCUMENT ME!
+	*
+	* @return DOCUMENT ME!
+	*
+	* @throws IllegalArgumentException DOCUMENT ME!
+	*/
+	public static String getTableName(Class objectClass) {
+		if (objectClass == null) {
+			throw new IllegalArgumentException("The class object cannot be null!");
+		}
+
+		Persistable annotation =
+			(Persistable) objectClass.getAnnotation(Persistable.class);
+
+		String tableName;
+
+		if (annotation != null) {
+			tableName = annotation.table();
+
+			if ("".equals(tableName)) {
+				tableName = objectClass.getSimpleName();
+			}
+		} else {
+			throw new IllegalArgumentException(objectClass
+				+ " is not a valid Persistable class.");
+		}
+
+		return tableName;
 	}
 
 	/**
