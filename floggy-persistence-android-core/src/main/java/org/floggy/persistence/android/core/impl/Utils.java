@@ -24,6 +24,7 @@ import org.floggy.persistence.android.FloggyException;
 import org.floggy.persistence.android.Log;
 
 import android.content.ContentValues;
+
 import android.database.Cursor;
 
 /**
@@ -66,6 +67,7 @@ public class Utils {
 				field.setAccessible(true);
 
 				idField = field;
+
 				break;
 			}
 		}
@@ -113,7 +115,8 @@ public class Utils {
 	*
 	* @throws FloggyException DOCUMENT ME!
 	*/
-	public static ContentValues getValues(Object object) throws FloggyException {
+	public static ContentValues getValues(Object object)
+		throws FloggyException {
 		ContentValues values = new ContentValues();
 
 		Field[] fields = object.getClass().getDeclaredFields();
@@ -258,7 +261,7 @@ public class Utils {
 						} else if (fieldType.equals(byte.class)
 							 || fieldType.equals(Byte.class)) {
 							Utils.setProperty(object, fieldName, fieldType,
-									cursor.getInt(columnIndex));
+								cursor.getInt(columnIndex));
 						} else if (fieldType.equals(double.class)
 							 || fieldType.equals(Double.class)) {
 							Utils.setProperty(object, fieldName, fieldType,

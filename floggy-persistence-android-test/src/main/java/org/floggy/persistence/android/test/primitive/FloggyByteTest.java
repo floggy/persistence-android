@@ -30,7 +30,7 @@ public class FloggyByteTest extends AbstractTest {
 	* @return DOCUMENT ME!
 	*/
 	public Object getDefaultValue() {
-		return Byte.valueOf((byte)0);
+		return Byte.valueOf((byte) 0);
 	}
 
 	/**
@@ -40,7 +40,7 @@ public class FloggyByteTest extends AbstractTest {
 	*/
 	@Override
 	public Object getNewValueForSetMethod() {
-		return Byte.valueOf((byte)-90);
+		return Byte.valueOf((byte) -90);
 	}
 
 	/**
@@ -50,7 +50,7 @@ public class FloggyByteTest extends AbstractTest {
 	*/
 	@Override
 	public Object getValueForSetMethod() {
-		return Byte.valueOf((byte)45);
+		return Byte.valueOf((byte) 45);
 	}
 
 	/**

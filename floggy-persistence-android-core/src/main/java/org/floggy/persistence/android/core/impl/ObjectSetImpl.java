@@ -80,7 +80,6 @@ public class ObjectSetImpl implements ObjectSet {
 	* @return DOCUMENT ME!
 	*
 	* @throws FloggyException DOCUMENT ME!
-	* @throws IllegalArgumentException DOCUMENT ME!
 	*/
 	public long getId(int index) throws FloggyException {
 		Field field = Utils.getIdField(persistableClass);
@@ -92,7 +91,8 @@ public class ObjectSetImpl implements ObjectSet {
 				throw new FloggyException("Invalid index");
 			}
 		} else {
-			throw new FloggyException(persistableClass.getName() + " does not have id field!");
+			throw new FloggyException(persistableClass.getName()
+				+ " does not have id field!");
 		}
 	}
 
