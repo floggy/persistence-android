@@ -113,28 +113,17 @@ public class Utils {
 	* @param objectClass DOCUMENT ME!
 	*
 	* @return DOCUMENT ME!
-	*
-	* @throws IllegalArgumentException DOCUMENT ME!
 	*/
 	public static String getTableName(Class objectClass) {
-		if (objectClass == null) {
-			throw new IllegalArgumentException("The class object cannot be null!");
-		}
+		validatePersistableClassArgument(objectClass);
 
 		Persistable annotation =
 			(Persistable) objectClass.getAnnotation(Persistable.class);
 
-		String tableName;
+		String tableName = annotation.table();
 
-		if (annotation != null) {
-			tableName = annotation.table();
-
-			if ("".equals(tableName)) {
-				tableName = objectClass.getSimpleName();
-			}
-		} else {
-			throw new IllegalArgumentException(objectClass
-				+ " is not a valid Persistable class.");
+		if ("".equals(tableName)) {
+			tableName = objectClass.getSimpleName();
 		}
 
 		if (Log.isLoggable(TAG, Log.DEBUG)) {
@@ -332,6 +321,27 @@ public class Utils {
 			} catch (Exception ex) {
 				throw Utils.handleException(ex);
 			}
+		}
+	}
+
+	/**
+	* DOCUMENT ME!
+	*
+	* @param objectClass DOCUMENT ME!
+	*
+	* @throws IllegalArgumentException DOCUMENT ME!
+	*/
+	public static void validatePersistableClassArgument(Class objectClass) {
+		if (objectClass == null) {
+			throw new IllegalArgumentException("The class object cannot be null!");
+		}
+
+		Persistable annotation =
+			(Persistable) objectClass.getAnnotation(Persistable.class);
+
+		if (annotation == null) {
+			throw new IllegalArgumentException(objectClass
+				+ " is not a valid Persistable class.");
 		}
 	}
 

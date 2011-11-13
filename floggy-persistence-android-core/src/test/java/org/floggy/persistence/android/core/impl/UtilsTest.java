@@ -116,4 +116,39 @@ public class UtilsTest extends TestCase {
 			assertEquals(IllegalArgumentException.class, ex.getClass());
 		}
 	}
+
+	/**
+	* DOCUMENT ME!
+	*/
+	public void testValidatePersistableClassArgumentNotPersistableClass() {
+		try {
+			Utils.validatePersistableClassArgument(String.class);
+			fail("A IllegalArgumentException must be throw!");
+		} catch (Exception ex) {
+			assertEquals(IllegalArgumentException.class, ex.getClass());
+		}
+	}
+
+	/**
+	* DOCUMENT ME!
+	*/
+	public void testValidatePersistableClassArgumentNullArgument() {
+		try {
+			Utils.validatePersistableClassArgument(null);
+			fail("A IllegalArgumentException must be throw!");
+		} catch (Exception ex) {
+			assertEquals(IllegalArgumentException.class, ex.getClass());
+		}
+	}
+
+	/**
+	* DOCUMENT ME!
+	*/
+	public void testValidatePersistableClassArgumentPersistableClass() {
+		try {
+			Utils.validatePersistableClassArgument(BeanWithIdField.class);
+		} catch (Exception ex) {
+			fail(ex.getMessage());
+		}
+	}
 }
