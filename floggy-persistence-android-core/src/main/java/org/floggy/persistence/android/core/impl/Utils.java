@@ -22,6 +22,7 @@ import java.lang.reflect.Modifier;
 
 import org.floggy.persistence.android.FloggyException;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 
 import android.util.Log;
@@ -91,6 +92,67 @@ public class Utils {
 			object.getClass().getMethod(getGetterMethodName(fieldName), null);
 
 		return method.invoke(object, null);
+	}
+
+	/**
+	* DOCUMENT ME!
+	*
+	* @param object DOCUMENT ME!
+	*
+	* @return DOCUMENT ME!
+	*
+	* @throws FloggyException DOCUMENT ME!
+	*/
+	public static ContentValues getValues(Object object) throws FloggyException {
+		ContentValues values = new ContentValues();
+
+		Field[] fields = object.getClass().getDeclaredFields();
+
+		for (Field field : fields) {
+			try {
+				int modifier = field.getModifiers();
+
+				if (!(Modifier.isStatic(modifier) || Modifier.isTransient(modifier))) {
+					String fieldName = field.getName();
+					Class fieldType = field.getType();
+
+					try {
+						Object value = Utils.getProperty(object, fieldName);
+
+						if (fieldType.equals(boolean.class)
+							 || fieldType.equals(Boolean.class)) {
+							values.put(field.getName(), (Boolean) value);
+						} else if (fieldType.equals(byte.class)
+							 || fieldType.equals(Byte.class)) {
+							values.put(field.getName(), (Byte) value);
+						} else if (fieldType.equals(double.class)
+							 || fieldType.equals(Double.class)) {
+							values.put(field.getName(), (Double) value);
+						} else if (fieldType.equals(float.class)
+							 || fieldType.equals(Float.class)) {
+							values.put(field.getName(), (Float) value);
+						} else if (fieldType.equals(int.class)
+							 || fieldType.equals(Integer.class)) {
+							values.put(field.getName(), (Integer) value);
+						} else if (fieldType.equals(long.class)
+							 || fieldType.equals(Long.class)) {
+							values.put(field.getName(), (Long) value);
+						} else if (fieldType.equals(short.class)
+							 || fieldType.equals(Short.class)) {
+							values.put(field.getName(), (Short) value);
+						} else if (fieldType.equals(String.class)) {
+							values.put(field.getName(), (String) value);
+						}
+					} catch (NoSuchMethodException nsmex) {
+						continue;
+					}
+				}
+			} catch (Exception ex) {
+				throw Utils.handleException(ex);
+			}
+		}
+
+		return values;
 	}
 
 	/**

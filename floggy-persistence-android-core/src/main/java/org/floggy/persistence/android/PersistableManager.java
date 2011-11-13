@@ -17,7 +17,6 @@ package org.floggy.persistence.android;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,13 +24,9 @@ import org.floggy.persistence.android.core.impl.DatabaseHelper;
 import org.floggy.persistence.android.core.impl.ObjectSetImpl;
 import org.floggy.persistence.android.core.impl.Utils;
 
-import android.content.ContentValues;
 import android.content.Context;
-
 import android.database.Cursor;
-
 import android.database.sqlite.SQLiteDatabase;
-
 import android.util.Log;
 
 /**
@@ -376,11 +371,11 @@ public class PersistableManager {
 
 		if (id > 0) {
 			Log.d(TAG, "Updating object: " + object);
-			database.update(objectClass.getSimpleName(), getValues(object),
+			database.update(objectClass.getSimpleName(), Utils.getValues(object),
 				"rowid=?", new String[] { String.valueOf(id) });
 		} else {
 			Log.d(TAG, "Inserting object: " + object);
-			id = database.insert(objectClass.getSimpleName(), null, getValues(object));
+			id = database.insert(objectClass.getSimpleName(), null, Utils.getValues(object));
 
 			if (field != null) {
 				try {
@@ -513,70 +508,6 @@ public class PersistableManager {
 		}
 
 		return tableName;
-	}
-
-	/**
-	* DOCUMENT ME!
-	*
-	* @param object DOCUMENT ME!
-	*
-	* @return DOCUMENT ME!
-	*
-	* @throws FloggyException DOCUMENT ME!
-	*/
-	protected ContentValues getValues(Object object) throws FloggyException {
-		ContentValues values = new ContentValues();
-
-		Field[] fields = object.getClass().getDeclaredFields();
-
-		for (Field field : fields) {
-			try {
-				int modifier = field.getModifiers();
-
-				if (!(Modifier.isStatic(modifier) || Modifier.isTransient(modifier))) {
-					String fieldName = field.getName();
-					Class fieldType = field.getType();
-
-					try {
-						Object value = Utils.getProperty(object, fieldName);
-						System.out.println(value);
-
-						if (fieldType.equals(boolean.class)
-							 || fieldType.equals(Boolean.class)) {
-							values.put(field.getName(), (Boolean) value);
-						} else if (fieldType.equals(byte.class)
-							 || fieldType.equals(Byte.class)) {
-							values.put(field.getName(), (Byte) value);
-						} else if (fieldType.equals(double.class)
-							 || fieldType.equals(Double.class)) {
-							values.put(field.getName(), (Double) value);
-						} else if (fieldType.equals(float.class)
-							 || fieldType.equals(Float.class)) {
-							values.put(field.getName(), (Float) value);
-						} else if (fieldType.equals(int.class)
-							 || fieldType.equals(Integer.class)) {
-							values.put(field.getName(), (Integer) value);
-						} else if (fieldType.equals(long.class)
-							 || fieldType.equals(Long.class)) {
-							values.put(field.getName(), (Long) value);
-						} else if (fieldType.equals(short.class)
-							 || fieldType.equals(Short.class)) {
-							values.put(field.getName(), (Short) value);
-						} else if (fieldType.equals(String.class)) {
-							values.put(field.getName(), (String) value);
-						}
-					} catch (NoSuchMethodException nsmex) {
-						continue;
-					}
-				}
-			} catch (Exception ex) {
-				throw Utils.handleException(ex);
-			}
-		}
-
-		System.out.println(values.toString());
-
-		return values;
 	}
 
 	/**
