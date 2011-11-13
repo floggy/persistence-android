@@ -88,8 +88,8 @@ public class PersistableManager {
 	* 				the object.
 	*/
 	public int delete(Class objectClass, long id) throws FloggyException {
-		String tableName = Utils.getTableName(objectClass);
-
+		Metadata metadata = MetadataManager.getMetadata(objectClass);
+		String tableName = metadata.getTableName();
 		SQLiteDatabase database = databaseHelper.getWritableDatabase();
 
 		return database.delete(tableName, "rowid=?",
@@ -109,8 +109,9 @@ public class PersistableManager {
 	* @throws IllegalArgumentException DOCUMENT ME!
 	*/
 	public int delete(Object object) throws FloggyException {
-		String tableName = Utils.getTableName(object.getClass());
-		Field field = Utils.getIdField(object.getClass());
+		Metadata metadata = MetadataManager.getMetadata(object.getClass());
+		String tableName = metadata.getTableName();
+		Field field = metadata.getIdField();
 
 		if (field != null) {
 			SQLiteDatabase database = databaseHelper.getWritableDatabase();
@@ -151,8 +152,8 @@ public class PersistableManager {
 	* 				the objects.
 	*/
 	public int deleteAll(Class objectClass) throws FloggyException {
-		String tableName = Utils.getTableName(objectClass);
-
+		Metadata metadata = MetadataManager.getMetadata(objectClass);
+		String tableName = metadata.getTableName();
 		SQLiteDatabase database = databaseHelper.getWritableDatabase();
 
 		return database.delete(tableName, null, null);
@@ -202,8 +203,8 @@ public class PersistableManager {
 	*/
 	public ObjectSet find(Class objectClass, Filter filter,
 		Comparator comparator, boolean lazy) throws FloggyException {
-		String tableName = Utils.getTableName(objectClass);
-
+		Metadata metadata = MetadataManager.getMetadata(objectClass);
+		String tableName = metadata.getTableName();
 		SQLiteDatabase database = databaseHelper.getReadableDatabase();
 
 		Cursor cursor =
@@ -223,7 +224,8 @@ public class PersistableManager {
 	* @throws IllegalArgumentException DOCUMENT ME!
 	*/
 	public long getId(Object object) {
-		Field field = Utils.getIdField(object.getClass());
+		Metadata metadata = MetadataManager.getMetadata(object.getClass());
+		Field field = metadata.getIdField();
 
 		if (field != null) {
 			try {
@@ -295,7 +297,8 @@ public class PersistableManager {
 				"The persistable object cannot be null!");
 		}
 
-		String tableName = Utils.getTableName(object.getClass());
+		Metadata metadata = MetadataManager.getMetadata(object.getClass());
+		String tableName = metadata.getTableName();
 
 		SQLiteDatabase database = databaseHelper.getReadableDatabase();
 
@@ -308,7 +311,7 @@ public class PersistableManager {
 			if (cursor.moveToFirst()) {
 				Utils.setValues(cursor, object);
 
-				Field field = Utils.getIdField(object.getClass());
+				Field field = metadata.getIdField();
 
 				if (field != null) {
 					try {
@@ -349,7 +352,8 @@ public class PersistableManager {
 				"The persistable object cannot be null!");
 		}
 
-		Class objectClass = object.getClass();
+		Metadata metadata = MetadataManager.getMetadata(object.getClass());
+		Class objectClass = metadata.getObjectClass();
 
 		SQLiteDatabase database = databaseHelper.getWritableDatabase();
 
@@ -359,7 +363,7 @@ public class PersistableManager {
 			e.printStackTrace();
 		}
 
-		Field field = Utils.getIdField(object.getClass());
+		Field field = metadata.getIdField();
 
 		long id = 0;
 
@@ -419,7 +423,8 @@ public class PersistableManager {
 	*/
 	protected void createTable(Class objectClass, SQLiteDatabase database)
 		throws Exception {
-		String tableName = Utils.getTableName(objectClass);
+		Metadata metadata = MetadataManager.getMetadata(objectClass);
+		String tableName = metadata.getTableName();
 
 		if (!tables.contains(tableName)) {
 			StringBuilder builder = new StringBuilder();
@@ -430,6 +435,7 @@ public class PersistableManager {
 
 			int initialLength = builder.length();
 
+			Field idField = metadata.getIdField();
 			Field[] fields = objectClass.getDeclaredFields();
 
 			for (Field field : fields) {
@@ -452,10 +458,8 @@ public class PersistableManager {
 						builder.append(fieldName);
 						builder.append(" integer");
 
-						org.floggy.persistence.android.Field fieldAnnotation =
-							(org.floggy.persistence.android.Field) field.getAnnotation(org.floggy.persistence.android.Field.class);
 
-						if ((fieldAnnotation != null) && fieldAnnotation.id()) {
+						if (field.equals(idField)) {
 							builder.append(" primary key autoincrement");
 						}
 					} else if (fieldType.equals(double.class)
