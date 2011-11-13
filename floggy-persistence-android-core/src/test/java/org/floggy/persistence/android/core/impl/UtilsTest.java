@@ -18,6 +18,7 @@ package org.floggy.persistence.android.core.impl;
 import java.lang.reflect.Field;
 
 import org.floggy.persistence.android.BeanWithIdField;
+import org.floggy.persistence.android.BeanWithTableName;
 import org.floggy.persistence.android.BeanWithoutIdField;
 
 import junit.framework.TestCase;
@@ -61,6 +62,56 @@ public class UtilsTest extends TestCase {
 		try {
 			Utils.getIdField(null);
 			fail("A IllegalArgumentException must be throw!");
+		} catch (Exception ex) {
+			assertEquals(IllegalArgumentException.class, ex.getClass());
+		}
+	}
+
+	/**
+	* DOCUMENT ME!
+	*/
+	public void testGetTableNameNotPersistableClass() {
+		try {
+			Utils.getTableName(String.class);
+			fail("A IllegalArgumentException must be throw!");
+		} catch (Exception ex) {
+			assertEquals(IllegalArgumentException.class, ex.getClass());
+		}
+	}
+
+	/**
+	* DOCUMENT ME!
+	*/
+	public void testGetTableNameNullArgument() {
+		try {
+			Utils.getTableName(null);
+			fail("A IllegalArgumentException must be throw!");
+		} catch (Exception ex) {
+			assertEquals(IllegalArgumentException.class, ex.getClass());
+		}
+	}
+
+	/**
+	* DOCUMENT ME!
+	*/
+	public void testGetTableNamePersistableClassDefinedTable() {
+		try {
+			String tableName = Utils.getTableName(BeanWithTableName.class);
+			assertNotNull(tableName);
+			assertEquals("WithTableName", tableName);
+		} catch (Exception ex) {
+			assertEquals(IllegalArgumentException.class, ex.getClass());
+		}
+	}
+
+	/**
+	* DOCUMENT ME!
+	*/
+	public void testGetTableNamePersistableClassNotDefinedTable() {
+		try {
+			String tableName = Utils.getTableName(BeanWithIdField.class);
+			assertNotNull(tableName);
+			assertEquals(BeanWithIdField.class.getSimpleName(), tableName);
 		} catch (Exception ex) {
 			assertEquals(IllegalArgumentException.class, ex.getClass());
 		}
