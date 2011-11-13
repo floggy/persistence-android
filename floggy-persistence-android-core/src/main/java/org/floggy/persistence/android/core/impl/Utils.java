@@ -45,7 +45,7 @@ public class Utils {
 	*
 	* @throws IllegalArgumentException DOCUMENT ME!
 	*/
-	public static Field getIDField(Class objectClass) {
+	public static Field getIdField(Class objectClass) {
 		if (objectClass == null) {
 			throw new IllegalArgumentException("The class object cannot be null!");
 		}

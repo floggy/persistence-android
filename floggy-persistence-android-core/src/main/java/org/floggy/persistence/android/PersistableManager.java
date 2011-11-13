@@ -108,7 +108,7 @@ public class PersistableManager {
 	*/
 	public int delete(Object object) throws FloggyException {
 		String tableName = getTableName(object.getClass());
-		Field field = Utils.getIDField(object.getClass());
+		Field field = Utils.getIdField(object.getClass());
 
 		if (field != null) {
 			SQLiteDatabase database = databaseHelper.getWritableDatabase();
@@ -221,7 +221,7 @@ public class PersistableManager {
 	* @throws IllegalArgumentException DOCUMENT ME!
 	*/
 	public long getId(Object object) {
-		Field field = Utils.getIDField(object.getClass());
+		Field field = Utils.getIdField(object.getClass());
 
 		if (field != null) {
 			try {
@@ -306,7 +306,7 @@ public class PersistableManager {
 			if (cursor.moveToFirst()) {
 				Utils.setValues(cursor, object);
 
-				Field field = Utils.getIDField(object.getClass());
+				Field field = Utils.getIdField(object.getClass());
 
 				if (field != null) {
 					try {
@@ -357,7 +357,7 @@ public class PersistableManager {
 			e.printStackTrace();
 		}
 
-		Field field = Utils.getIDField(object.getClass());
+		Field field = Utils.getIdField(object.getClass());
 
 		long id = 0;
 

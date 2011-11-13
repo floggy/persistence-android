@@ -83,7 +83,7 @@ public class ObjectSetImpl implements ObjectSet {
 	* @throws IllegalArgumentException DOCUMENT ME!
 	*/
 	public long getId(int index) throws FloggyException {
-		Field field = Utils.getIDField(persistableClass);
+		Field field = Utils.getIdField(persistableClass);
 
 		if (field != null) {
 			if (cursor.moveToPosition(index)) {
