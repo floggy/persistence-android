@@ -21,11 +21,10 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 import org.floggy.persistence.android.FloggyException;
+import org.floggy.persistence.android.Log;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-
-import android.util.Log;
 
 /**
 * DOCUMENT ME!
@@ -50,25 +49,36 @@ public class Utils {
 			throw new IllegalArgumentException("The class object cannot be null!");
 		}
 
-		Log.v(TAG, objectClass.getName());
+		Field idField = null;
 
 		Field[] fields = objectClass.getDeclaredFields();
 
-		Log.v(TAG, "Amount of fields: " + fields.length);
+		if (Log.isLoggable(TAG, Log.DEBUG)) {
+			Log.d(TAG, "Getting Id field from class: " + objectClass.getName());
+			Log.d(TAG, "Amount of fields: " + fields.length);
+		}
 
 		for (Field field : fields) {
 			org.floggy.persistence.android.Field fieldAnnotation =
 				field.getAnnotation(org.floggy.persistence.android.Field.class);
-			Log.v(TAG, String.valueOf(fieldAnnotation));
 
 			if ((fieldAnnotation != null) && fieldAnnotation.id()) {
 				field.setAccessible(true);
 
-				return field;
+				idField = field;
+				break;
 			}
 		}
 
-		return null;
+		if (Log.isLoggable(TAG, Log.DEBUG)) {
+			if (idField != null) {
+				Log.d(TAG, "Found Id field : " + idField.toGenericString());
+			} else {
+				Log.d(TAG, "Not found Id field");
+			}
+		}
+
+		return idField;
 	}
 
 	/**

@@ -17,6 +17,7 @@ package org.floggy.persistence.android;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,9 +26,10 @@ import org.floggy.persistence.android.core.impl.ObjectSetImpl;
 import org.floggy.persistence.android.core.impl.Utils;
 
 import android.content.Context;
+
 import android.database.Cursor;
+
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 /**
 * This is the main class of the framework. All persistence operations
@@ -375,7 +377,8 @@ public class PersistableManager {
 				"rowid=?", new String[] { String.valueOf(id) });
 		} else {
 			Log.d(TAG, "Inserting object: " + object);
-			id = database.insert(objectClass.getSimpleName(), null, Utils.getValues(object));
+			id = database.insert(objectClass.getSimpleName(), null,
+					Utils.getValues(object));
 
 			if (field != null) {
 				try {
