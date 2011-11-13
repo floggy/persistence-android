@@ -313,10 +313,12 @@ public class PersistableManager {
 
 				Field field = Utils.getIDField(object.getClass());
 
-				try {
-					field.set(object, Long.valueOf(id));
-				} catch (Exception ex) {
-					throw new FloggyException(ex.getMessage(), ex);
+				if (field != null) {
+					try {
+						field.set(object, Long.valueOf(id));
+					} catch (Exception ex) {
+						throw new FloggyException(ex.getMessage(), ex);
+					}
 				}
 			} else {
 				throw new FloggyException("Object not found for id: " + id);

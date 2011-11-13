@@ -58,7 +58,7 @@ public class Utils {
 		for (Field field : fields) {
 			org.floggy.persistence.android.Field fieldAnnotation =
 				field.getAnnotation(org.floggy.persistence.android.Field.class);
-			Log.v(TAG, fieldAnnotation.toString());
+			Log.v(TAG, String.valueOf(fieldAnnotation));
 
 			if ((fieldAnnotation != null) && fieldAnnotation.id()) {
 				field.setAccessible(true);
