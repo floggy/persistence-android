@@ -137,6 +137,11 @@ public class Utils {
 				+ " is not a valid Persistable class.");
 		}
 
+		if (Log.isLoggable(TAG, Log.DEBUG)) {
+			Log.d(TAG,
+				"Mapping class " + objectClass.getName() + " to table " + tableName);
+		}
+
 		return tableName;
 	}
 
