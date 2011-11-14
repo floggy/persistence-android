@@ -25,8 +25,6 @@ import org.floggy.persistence.android.core.impl.DatabaseHelper;
 import org.floggy.persistence.android.core.impl.ObjectSetImpl;
 import org.floggy.persistence.android.core.impl.Utils;
 
-import android.content.Context;
-
 import android.database.Cursor;
 
 import android.database.sqlite.SQLiteDatabase;
@@ -120,8 +118,8 @@ public class PersistableManager {
 
 			try {
 				id = String.valueOf(field.getLong(object));
-			} catch (Exception e) {
-				e.printStackTrace();
+			} catch (Exception ex) {
+				Utils.handleException(ex);
 			}
 
 			return database.delete(tableName, "rowid=?", new String[] { id });
@@ -230,8 +228,8 @@ public class PersistableManager {
 		if (field != null) {
 			try {
 				return field.getLong(object);
-			} catch (Exception e) {
-				e.printStackTrace();
+			} catch (Exception ex) {
+				Utils.handleException(ex);
 			}
 		} else {
 			throw new IllegalArgumentException(
@@ -317,7 +315,7 @@ public class PersistableManager {
 					try {
 						field.set(object, Long.valueOf(id));
 					} catch (Exception ex) {
-						throw new FloggyException(ex.getMessage(), ex);
+						Utils.handleException(ex);
 					}
 				}
 			} else {
@@ -359,8 +357,8 @@ public class PersistableManager {
 
 		try {
 			createTable(objectClass, database);
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ex) {
+			Utils.handleException(ex);
 		}
 
 		Field field = metadata.getIdField();
@@ -370,8 +368,8 @@ public class PersistableManager {
 		if (field != null) {
 			try {
 				id = field.getLong(object);
-			} catch (Exception e) {
-				e.printStackTrace();
+			} catch (Exception ex) {
+				Utils.handleException(ex);
 			}
 		}
 
@@ -387,8 +385,8 @@ public class PersistableManager {
 			if (field != null) {
 				try {
 					field.set(object, Long.valueOf(id));
-				} catch (Exception e) {
-					e.printStackTrace();
+				} catch (Exception ex) {
+					Utils.handleException(ex);
 				}
 			}
 		}
