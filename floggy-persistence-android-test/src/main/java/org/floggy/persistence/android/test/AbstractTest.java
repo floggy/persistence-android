@@ -377,19 +377,13 @@ public abstract class AbstractTest extends FloggyBaseTest {
 		Object object = newInstance();
 		long id = manager.save(object);
 
-		System.out.println(object);
-
 		try {
 			assertTrue("Deveria ser diferente de -1!", id != -1);
 			object = newInstance();
-			System.out.println(object);
 			manager.load(object, id);
-			System.out.println(object);
 			setX(object, getNewValueForSetMethod());
-			System.out.println(object);
 
 			long tempId = manager.save(object);
-			System.out.println(object);
 			assertEquals(id, tempId);
 		} finally {
 			manager.delete(object.getClass(), id);

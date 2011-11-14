@@ -97,8 +97,6 @@ public class HelloFloggy extends Activity {
 						e.printStackTrace();
 					}
 
-					System.out.println();
-
 					try {
 						ObjectSet os = manager.find(Agent.class, null, null);
 						int size = os.size();
