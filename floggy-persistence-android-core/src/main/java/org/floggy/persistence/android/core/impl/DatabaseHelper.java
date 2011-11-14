@@ -15,7 +15,7 @@
  */
 package org.floggy.persistence.android.core.impl;
 
-import android.content.Context;
+import org.floggy.persistence.android.Configuration;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -27,13 +27,17 @@ import android.database.sqlite.SQLiteOpenHelper;
 * @version $Revision$
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
+	/** DOCUMENT ME! */
+	protected Configuration configuration;
+
 /**
    * Creates a new PersonDatabaseHelper object.
    *
    * @param context DOCUMENT ME!
    */
-	public DatabaseHelper(String databaseName, Context context) {
-		super(context, databaseName, null, 1);
+	public DatabaseHelper(Configuration configuration) {
+		super(configuration.getContext(), configuration.getDatabaseName(), null, 1);
+		this.configuration = configuration;
 	}
 
 	/**

@@ -15,6 +15,7 @@
  */
 package org.floggy.persistence.android.sample;
 
+import org.floggy.persistence.android.Configuration;
 import org.floggy.persistence.android.ObjectSet;
 import org.floggy.persistence.android.PersistableManager;
 
@@ -109,6 +110,7 @@ public class HelloFloggy extends Activity {
 				}
 			});
 
-		manager = PersistableManager.getInstance(this);
+		Configuration configuration = new Configuration(this, "HelloFloggy");
+		manager = PersistableManager.getInstance(configuration);
 	}
 }

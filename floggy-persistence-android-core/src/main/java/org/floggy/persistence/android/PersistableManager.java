@@ -49,27 +49,27 @@ public class PersistableManager {
 	/** DOCUMENT ME! */
 	protected Set<String> tables = new HashSet<String>();
 
-	private PersistableManager(Context context) {
-		this.databaseHelper = new DatabaseHelper(null, context);
+	private PersistableManager(Configuration configuration) {
+		this.databaseHelper = new DatabaseHelper(configuration);
 		this.init();
 	}
 
 	/**
 	* Returns the current instance of PersistableManager.
 	*
-	* @param context DOCUMENT ME!
+	* @param configuration DOCUMENT ME!
 	*
 	* @return The current instance of PersistableManager.
 	*
 	* @throws IllegalArgumentException DOCUMENT ME!
 	*/
-	public static PersistableManager getInstance(Context context) {
-		if (context == null) {
-			throw new IllegalArgumentException("Context cannot be null");
+	public static PersistableManager getInstance(Configuration configuration) {
+		if (configuration == null) {
+			throw new IllegalArgumentException("Configuration cannot be null");
 		}
 
 		if (instance == null) {
-			instance = new PersistableManager(context);
+			instance = new PersistableManager(configuration);
 		}
 
 		return instance;
@@ -457,7 +457,6 @@ public class PersistableManager {
 						 || fieldType.equals(Short.class)) {
 						builder.append(fieldName);
 						builder.append(" integer");
-
 
 						if (field.equals(idField)) {
 							builder.append(" primary key autoincrement");

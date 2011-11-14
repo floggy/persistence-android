@@ -13,12 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.floggy.persistence.android.test;
+package org.floggy.persistence.android;
 
-import org.floggy.persistence.android.Configuration;
-import org.floggy.persistence.android.PersistableManager;
-
-import android.test.AndroidTestCase;
+import android.content.Context;
 
 /**
 * DOCUMENT ME!
@@ -26,17 +23,43 @@ import android.test.AndroidTestCase;
 * @author <a href="mailto:thiago.moreira@floggy.org">Thiago Moreira</a>
 * @version $Revision$
  */
-public abstract class FloggyBaseTest extends AndroidTestCase {
+public class Configuration {
 	/** DOCUMENT ME! */
-	protected PersistableManager manager;
+	protected Context context;
+
+	/** DOCUMENT ME! */
+	protected String databaseName;
+
+/**
+   * Creates a new Configuration object.
+   *
+   * @param context DOCUMENT ME!
+   * @param databaseName DOCUMENT ME!
+   */
+	public Configuration(Context context, String databaseName) {
+		if (context == null) {
+			throw new IllegalArgumentException("Context cannot be null");
+		}
+
+		this.context = context;
+		this.databaseName = databaseName;
+	}
 
 	/**
 	* DOCUMENT ME!
+	*
+	* @return DOCUMENT ME!
 	*/
-	public void setUp() {
-		if (manager == null) {
-			Configuration configuration = new Configuration(getContext(), null);
-			manager = PersistableManager.getInstance(configuration);
-		}
+	public Context getContext() {
+		return context;
+	}
+
+	/**
+	* DOCUMENT ME!
+	*
+	* @return DOCUMENT ME!
+	*/
+	public String getDatabaseName() {
+		return databaseName;
 	}
 }

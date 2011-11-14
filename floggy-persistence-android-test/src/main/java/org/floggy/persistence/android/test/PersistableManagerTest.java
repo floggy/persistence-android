@@ -15,6 +15,7 @@
  */
 package org.floggy.persistence.android.test;
 
+import org.floggy.persistence.android.Configuration;
 import org.floggy.persistence.android.PersistableManager;
 
 import android.test.AndroidTestCase;
@@ -30,7 +31,8 @@ public class PersistableManagerTest extends AndroidTestCase {
 	* DOCUMENT ME!
 	*/
 	public void testGetInstanceNotNullContext() {
-		PersistableManager manager = PersistableManager.getInstance(getContext());
+		Configuration configuration = new Configuration(getContext(), null);
+		PersistableManager manager = PersistableManager.getInstance(configuration);
 
 		assertNotNull(manager);
 		assertEquals(PersistableManager.class, manager.getClass());
@@ -40,12 +42,13 @@ public class PersistableManagerTest extends AndroidTestCase {
 	* DOCUMENT ME!
 	*/
 	public void testGetInstanceNotNullContextSameInstance() {
-		PersistableManager manager = PersistableManager.getInstance(getContext());
+		Configuration configuration = new Configuration(getContext(), null);
+		PersistableManager manager = PersistableManager.getInstance(configuration);
 
 		assertNotNull(manager);
 		assertEquals(PersistableManager.class, manager.getClass());
 
-		PersistableManager manager2 = PersistableManager.getInstance(getContext());
+		PersistableManager manager2 = PersistableManager.getInstance(configuration);
 
 		assertNotNull(manager2);
 		assertEquals(PersistableManager.class, manager2.getClass());

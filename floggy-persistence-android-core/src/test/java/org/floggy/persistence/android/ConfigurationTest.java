@@ -13,12 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.floggy.persistence.android.test;
+package org.floggy.persistence.android;
 
-import org.floggy.persistence.android.Configuration;
-import org.floggy.persistence.android.PersistableManager;
-
-import android.test.AndroidTestCase;
+import junit.framework.TestCase;
 
 /**
 * DOCUMENT ME!
@@ -26,17 +23,16 @@ import android.test.AndroidTestCase;
 * @author <a href="mailto:thiago.moreira@floggy.org">Thiago Moreira</a>
 * @version $Revision$
  */
-public abstract class FloggyBaseTest extends AndroidTestCase {
-	/** DOCUMENT ME! */
-	protected PersistableManager manager;
-
+public class ConfigurationTest extends TestCase {
 	/**
 	* DOCUMENT ME!
 	*/
-	public void setUp() {
-		if (manager == null) {
-			Configuration configuration = new Configuration(getContext(), null);
-			manager = PersistableManager.getInstance(configuration);
+	public void testConstructorNullArgument() {
+		try {
+			new Configuration(null, null);
+			fail("A IllegalArgumentException must be throw!");
+		} catch (Exception ex) {
+			assertEquals(IllegalArgumentException.class, ex.getClass());
 		}
 	}
 }
