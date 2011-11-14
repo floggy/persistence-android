@@ -44,6 +44,13 @@ package org.floggy.persistence.android;
  */
 public interface ObjectSet {
 	/**
+	* Close the ObjectSet.
+	*
+	* @throws FloggyException DOCUMENT ME!
+	*/
+	void close() throws FloggyException;
+
+	/**
 	* Load the object at the specified index. A new instance will be
 	* created to each invocation of this method.
 	*

@@ -49,6 +49,17 @@ public class ObjectSetImpl implements ObjectSet {
 	/**
 	* DOCUMENT ME!
 	*
+	* @throws FloggyException DOCUMENT ME!
+	*/
+	public void close() throws FloggyException {
+		if ((cursor != null) && !cursor.isClosed()) {
+			cursor.close();
+		}
+	}
+
+	/**
+	* DOCUMENT ME!
+	*
 	* @param index DOCUMENT ME!
 	*
 	* @return DOCUMENT ME!

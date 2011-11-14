@@ -201,6 +201,8 @@ public abstract class AbstractTest extends FloggyBaseTest {
 		try {
 			ObjectSet set = manager.find(object.getClass(), null, null);
 			assertEquals(1, set.size());
+
+			set.close();
 		} finally {
 			manager.delete(object.getClass(), id);
 		}
@@ -251,6 +253,7 @@ public abstract class AbstractTest extends FloggyBaseTest {
 			assertEquals(1, set.size());
 			assertEquals(id, set.getId(0));
 			equals(getValueForSetMethod(), getX(set.get(0)));
+			set.close();
 		} finally {
 			manager.delete(object.getClass(), id);
 		}

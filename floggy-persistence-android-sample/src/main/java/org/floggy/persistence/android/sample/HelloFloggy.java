@@ -91,6 +91,8 @@ public class HelloFloggy extends Activity {
 						for (int i = 0; i < size; i++) {
 							Log.v(ACTIVITY_SERVICE, String.valueOf(os.get(i)));
 						}
+
+						os.close();
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -104,6 +106,8 @@ public class HelloFloggy extends Activity {
 						for (int i = 0; i < size; i++) {
 							Log.v(ACTIVITY_SERVICE, String.valueOf(os.get(i)));
 						}
+
+						os.close();
 					} catch (Exception e) {
 						Log.e(ACTIVITY_SERVICE, e.getMessage(), e);
 					}
