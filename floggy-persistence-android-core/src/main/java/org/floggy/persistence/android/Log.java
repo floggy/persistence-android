@@ -31,7 +31,7 @@ public class Log {
 	private static boolean isAndroidEnvironment;
 
 	static {
-		isAndroidEnvironment = false;
+		isAndroidEnvironment = "Dalvik".equals(System.getProperty("java.vm.name"));
 	}
 
 	/**
