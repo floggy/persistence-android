@@ -486,7 +486,7 @@ public class PersistableManager {
 	*/
 	protected void init() {
 		String sql =
-			"SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;";
+			"SELECT name FROM sqlite_master WHERE type='table' ORDER BY name";
 
 		SQLiteDatabase database = databaseHelper.getReadableDatabase();
 
